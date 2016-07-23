@@ -9,6 +9,27 @@ function! intero#loc#go_to_def()
     call timer_start(100, 's:do_the_hop', { 'repeat': 1 }) 
 endfunction
 
+function! intero#loc#get_identifier_information()
+    " Returns information about the identifier under the point. Return type is
+    " a dictionary with the keys 'module', 'line', 'beg_col', 'end_col', and
+    " 'identifier'.
+    let l:module = intero#util#path_to_module(expand('%'))
+    let l:line = line('.')
+    let l:identifier = intero#util#get_haskell_identifier()
+    let l:winview = winsaveview()
+    normal! |
+    call search('\<' . l:identifier . '\>', '', l:line)
+    let l:beg_col = intero#util#getcol()
+    let l:end_col = l:beg_col + len(l:identifier)
+    let l:cmd = join([':loc-at', l:module, l:line, l:beg_col, l:line, l:end_col, l:identifier], ' ')
+    call winrestview(l:winview)
+    return { 'module': l:module, 'line': l:line, 'beg_col': l:beg_col, 'end_col': l:end_col, 'identifier': l:identifier }
+endfunction
+
+""""""""""
+" Private:
+""""""""""
+
 function! s:do_the_hop()
     let l:response = join(intero#repl#get_last_response(), "\n")
     let l:split = split(l:response, ':')
@@ -35,22 +56,5 @@ function! s:do_the_hop()
         call cursor(l:start_row, l:start_col)
         exec 'cd ' . l:cwd
     endif
-endfunction
-
-function! intero#loc#get_identifier_information()
-    " Returns information about the identifier under the point. Return type is
-    " a dictionary with the keys 'module', 'line', 'beg_col', 'end_col', and
-    " 'identifier'.
-    let l:module = intero#util#path_to_module(expand('%'))
-    let l:line = line('.')
-    let l:identifier = intero#util#get_haskell_identifier()
-    let l:winview = winsaveview()
-    normal! |
-    call search('\<' . l:identifier . '\>', '', l:line)
-    let l:beg_col = intero#util#getcol()
-    let l:end_col = l:beg_col + len(l:identifier)
-    let l:cmd = join([':loc-at', l:module, l:line, l:beg_col, l:line, l:end_col, l:identifier], ' ')
-    call winrestview(l:winview)
-    return { 'module': l:module, 'line': l:line, 'beg_col': l:beg_col, 'end_col': l:end_col, 'identifier': l:identifier }
 endfunction
 

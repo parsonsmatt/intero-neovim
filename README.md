@@ -1,24 +1,22 @@
 # `intero-neovim` : v1.0.0
 
-Currently provides (primitive) type at point, evaluation, and module loading.
-I have no idea what I am doing with vimscript, so if you know what's up, let's
-collaborate! PRs, issues, and random feedback are all welcome.
+Get the lightning fast type information and go-to-definition that Intero
+provides without going to the dark side of emacs!
 
 ## Installing
 
-This plugin should be pathogen, vundle, etc. compatible. However, while that's
-the case, I recommend cloning this repository and managing it yourself. It's
-not stable at all, and you don't want this changing out from under you.
+This plugin is compatible with `pathogen`, `vim-plug`, etc.
 
 After you've installed the plugin, it'll keep your `intero` installs setup for
 you. I recommend adding `intero-0.1.16` to your `stack.yaml` build-depends to
-ensure you get the newer version.
+ensure you get the newer version, as the `intero-0.1.15` version doesn't
+automatically collect type information.
 
 ![Demo of Installation](demo-install-lo.gif)
 
 ## Usage
 
-This plugin provides an integration with [Intero](https://github.com/commercialhaskell/intero) via Neovim's terminal and
+This plugin provides an integration with [Intero][] via Neovim's terminal and
 asynchronous job control. You might like the following shortcuts:
 
 ```
@@ -105,6 +103,16 @@ first.
 
 Kills the Intero process and buffer.
 
+## Completion
+
+Completion is not handled by this plugin. Check out [neco-ghc][] for fast
+autocompletion using `deoplete` or `omnicomplete`. If you have good reason for
+wanting Intero-provided completion, please [post in the related
+issue](https://github.com/parsonsmatt/intero-neovim/issues/5).
+
 ## License
 
 [BSD3 License](http://www.opensource.org/licenses/BSD-3-Clause), the same license as ghcmod-vim.
+
+[intero]: https://github.com/commercialhaskell/intero
+[neco-ghc]: https://github.com/eagletmt/neco-ghc
