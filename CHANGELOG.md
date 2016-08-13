@@ -1,5 +1,9 @@
 # Change Log
 
+## `v1.0.1`
+
+- Added notices for `timer_start` and `stack`.
+
 ## `v1.0.0`
 
 Initial release! 

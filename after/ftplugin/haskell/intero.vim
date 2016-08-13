@@ -3,7 +3,7 @@ if exists('b:did_ftplugin_intero') && b:did_ftplugin_intero
 endif
 let b:did_ftplugin_intero = 1
 
-if !has('timer_start')
+if !has('patch-7.4.1578')
     echom "This version of intero-neovim requires the `timer_start` feature, which your neovim version lacks."
     finish
 endif
