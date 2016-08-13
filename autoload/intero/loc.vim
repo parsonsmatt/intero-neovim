@@ -6,7 +6,7 @@
 
 function! intero#loc#go_to_def()
     call intero#repl#send(intero#util#make_command(':loc-at'))
-    call timer_start(100, 's:do_the_hop', { 'repeat': 1 }) 
+    call timer_start(100, 's:do_the_hop', { 'repeat': 1 })
 endfunction
 
 function! s:do_the_hop()
@@ -41,7 +41,7 @@ function! intero#loc#get_identifier_information()
     " Returns information about the identifier under the point. Return type is
     " a dictionary with the keys 'module', 'line', 'beg_col', 'end_col', and
     " 'identifier'.
-    let l:module = intero#util#path_to_module(expand('%'))
+    let l:module = intero#detect_module()
     let l:line = line('.')
     let l:identifier = intero#util#get_haskell_identifier()
     let l:winview = winsaveview()
