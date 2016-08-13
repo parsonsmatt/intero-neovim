@@ -6,7 +6,7 @@
 
 function! intero#loc#go_to_def()
     call intero#repl#send(intero#util#make_command(':loc-at'))
-    call timer_start(100, 's:do_the_hop', { 'repeat': 1 }) 
+    call timer_start(100, 's:do_the_hop', { 'repeat': 1 })
 endfunction
 
 function! intero#loc#get_identifier_information()
@@ -57,4 +57,3 @@ function! s:do_the_hop()
         exec 'cd ' . l:cwd
     endif
 endfunction
-

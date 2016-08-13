@@ -24,14 +24,14 @@ endfunction
 
 function! intero#repl#load_current_module()
     " Loads the current module, inferred from the given filename.
-    call intero#repl#eval(':l ' . intero#util#path_to_module(expand('%')))
+    call intero#repl#eval(':l ' . intero#detect_module())
 endfunction
 
 function! intero#repl#type(generic)
     " Gets the type at the current point.
     let l:line = line('.')
     let l:col = intero#util#getcol()
-    let l:module = intero#util#path_to_module(expand('%'))
+    let l:module = intero#detect_module()
     if a:generic
         let l:identifier = intero#util#get_haskell_identifier()
     else
