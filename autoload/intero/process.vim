@@ -12,6 +12,10 @@ function! intero#process#ensure_installed()
     "
     " TODO: Verify that we have a version of intero that the plugin can work
     " with.
+    if (!executable('stack'))
+        echom "Stack is required for Intero."
+    endif
+
     let l:version = system('stack exec --verbosity silent -- intero --version')
     if v:shell_error
         echom "Intero not installed."
@@ -25,6 +29,14 @@ function! intero#process#start()
     if !exists('g:intero_buffer_id')
         let g:intero_buffer_id = s:start_buffer(10)
     endif
+    augroup close_intero
+        autocmd!
+        autocmd VimLeave * call intero#repl#eval(":quit")
+        autocmd VimLeavePre * InteroKill
+        autocmd VimLeave * InteroKill
+        autocmd VimLeavePre * call jobstop(g:intero_job_id)
+        autocmd VimLeave * call jobstop(g:intero_job_id)
+    augroup END
     return g:intero_buffer_id
 endfunction
 
