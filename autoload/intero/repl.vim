@@ -63,7 +63,7 @@ endfunction
 function! intero#repl#insert_type()
     let g:intero_should_echo = 0
     call intero#repl#send(intero#util#make_command(':type-at'))
-    call timer_start(100, 's:paste_type', { 'repeat': 1 })
+    call timer_start(100, function('s:paste_type'), { 'repeat': 1 })
 endfunction
 
 function! intero#repl#reload()
@@ -82,7 +82,7 @@ endfunction
 " Private:
 """"""""""
 
-function s:paste_type()
+function s:paste_type(timer)
     let l:signature = join(intero#repl#get_last_response(), "\n")
     call append(line(".")-1, l:signature)
 endfunction
