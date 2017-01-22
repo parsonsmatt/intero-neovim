@@ -82,7 +82,11 @@ function! s:term_buffer(job_id, data, event)
     " let g:intero_last_response = intero#repl#get_last_response()
 endfunction
 
-function! s:on_response()
+function! s:on_response(timer)
+    if !exists('g:intero_buffer_id')
+      return
+    endif
+
     let l:mode = mode()
 
     if ! (exists('g:intero_should_echo') && g:intero_should_echo)
@@ -98,7 +102,7 @@ function! s:on_response()
     if !exists('s:previous_response')
         let s:previous_response = l:current_response
     endif
-    
+
     if l:current_response != s:previous_response
         let s:previous_response = l:current_response
         for r in s:previous_response
@@ -121,7 +125,7 @@ function! s:start_buffer(height)
     let g:intero_job_id = b:terminal_job_id
     quit
     call feedkeys("\<ESC>")
-    call timer_start(100, 's:on_response', {'repeat':-1})
+    call timer_start(100, function('s:on_response'), {'repeat':-1})
     return l:buffer_id
 endfunction
 
