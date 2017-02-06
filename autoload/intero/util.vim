@@ -5,10 +5,14 @@
 " don't fit specifically in any one.
 """""""""
 
+function! intero#util#stack_opts()
+    return '--stack-yaml ' . g:intero_stack_yaml
+endfunction
+
 function! intero#util#get_intero_window()
     " Returns the window ID that the Intero process is on, or -1 if it isn't
     " found.
-    return bufwinnr('stack ghci --with-ghc intero')
+    return bufwinnr('stack ' .  intero#util#stack_opts() . ' ghci --with-ghc intero')
 endfunction
 
 function! intero#util#path_to_module(path)

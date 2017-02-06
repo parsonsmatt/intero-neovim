@@ -7,11 +7,6 @@ provides without going to the dark side of emacs!
 
 This plugin is compatible with `pathogen`, `vim-plug`, etc.
 
-After you've installed the plugin, it'll keep your `intero` installs setup for
-you. I recommend adding `intero-0.1.16` to your `stack.yaml` build-depends to
-ensure you get the newer version, as the `intero-0.1.15` version doesn't
-automatically collect type information.
-
 ![Demo of Installation](demo-install-lo.gif)
 
 ## Usage
@@ -42,6 +37,9 @@ nnoremap <Leader>hiu :InteroUses<CR>
 " Reload the file in Intero after saving
 autocmd! BufWritePost *.hs InteroReload
 ```
+
+If you need to use a specific `stack.yaml` file, you can set either of `STACK_YAML`
+or `g:intero_stack_yaml` before invoking a command.
 
 ![REPL demo](demo-repl-lo.gif)
 

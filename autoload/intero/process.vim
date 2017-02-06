@@ -16,10 +16,24 @@ function! intero#process#ensure_installed()
         echom "Stack is required for Intero."
     endif
 
-    let l:version = system('stack exec --verbosity silent -- intero --version')
+    " We haven't set the stack-root yet, so we shouldn't be able to find this yet.
+    if (executable('intero'))
+        echom "Intero is installed in your PATH, which may cause problems when using different resolvers."
+        echom "This usually happens if you run `stack install intero` instead of `stack build intero`."
+    endif
+
+    " Find stack.yaml
+    if (!exists("g:intero_stack_yaml"))
+        " Change dir temporarily and see if stack can find a config
+        silent! lcd %:p:h
+        let g:intero_stack_yaml = systemlist('stack path --config-location')[0]
+        silent! lcd -
+    endif
+
+    let l:version = system('stack ' . intero#util#stack_opts() . ' exec --verbosity silent -- intero --version')
     if v:shell_error
         echom "Intero not installed."
-        execute "! stack build intero"
+        execute ("! stack " . intero#util#stack_opts() . " build intero")
     endif
 endfunction
 
@@ -117,7 +131,7 @@ function! s:start_buffer(height)
     " Starts an Intero REPL in a split below the current buffer. Returns the
     " ID of the buffer.
     exe 'below ' . a:height . ' split'
-    terminal! stack ghci --with-ghc intero
+    exe 'terminal! stack ' . intero#util#stack_opts() . ' ghci --with-ghc intero'
     set bufhidden=hide
     set noswapfile
     set hidden
