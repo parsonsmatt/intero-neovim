@@ -3,6 +3,7 @@
 ## `v1.0.1`
 
 - Added notices for `timer_start` and `stack`.
+- Identify and use `stack.yaml` for the project regardless of neovim's current directory
 
 ## `v1.0.0`
 
