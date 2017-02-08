@@ -54,6 +54,4 @@ let b:undo_ftplugin .= join(map([
             \ ], '"delcommand " . v:val'), ' | ')
 let b:undo_ftplugin .= ' | unlet b:did_ftplugin_intero'
 
-call intero#process#start()
-
 " vim: set ts=4 sw=4 et fdm=marker:

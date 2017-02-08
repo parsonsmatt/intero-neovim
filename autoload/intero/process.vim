@@ -30,16 +30,28 @@ function! intero#process#ensure_installed()
         silent! lcd -
     endif
 
-    let l:version = system('stack ' . intero#util#stack_opts() . ' exec --verbosity silent -- intero --version')
-    if v:shell_error
-        echom "Intero not installed."
-        execute ("! stack " . intero#util#stack_opts() . " build intero")
+    if(!exists("g:intero_built"))
+        let l:version = system('stack ' . intero#util#stack_opts() . ' exec --verbosity silent -- intero --version')
+        if v:shell_error
+            let g:intero_built = 0
+            echom "Intero not installed."
+            let l:opts = { 'on_exit': function('s:build_complete') }
+            call s:start_compile(10, l:opts)
+        else
+            let g:intero_built = 1
+            call intero#process#start()
+        endif
     endif
 endfunction
 
 function! intero#process#start()
     " Starts an intero terminal buffer, initially only occupying a small area.
     " Returns the intero buffer id.
+    if(!exists('g:intero_built') || g:intero_built == 0)
+        echom "Intero is still compiling"
+        return
+    endif
+
     if !exists('g:intero_buffer_id')
         let g:intero_buffer_id = s:start_buffer(10)
     endif
@@ -127,6 +139,27 @@ function! s:on_response(timer)
     endif
 endfunction
 
+function! s:start_compile(height, opts)
+    " Starts an Intero compiling in a split below the current buffer.
+    " Returns the ID of the buffer.
+    exe 'below ' . a:height . ' split'
+
+    enew!
+    call termopen('stack ' . intero#util#stack_opts() . ' build intero', a:opts)
+    " startinsert
+    " exe 'terminal! stack ' . intero#util#stack_opts() . ' build intero'
+
+    set bufhidden=hide
+    set noswapfile
+    set hidden
+    let l:buffer_id = bufnr('%')
+    let g:intero_job_id = b:terminal_job_id
+    call feedkeys("\<ESC>")
+    call timer_start(100, function('s:on_response'), {'repeat':-1})
+    wincmd w
+    return l:buffer_id
+endfunction
+
 function! s:start_buffer(height)
     " Starts an Intero REPL in a split below the current buffer. Returns the
     " ID of the buffer.
@@ -156,3 +189,15 @@ function! s:hide_buffer()
         exec 'silent! ' . l:window_number . 'wincmd c'
     endif
 endfunction
+
+function! s:build_complete(job_id, data, event) abort
+    if(a:event == 'exit')
+        if(a:data == 0)
+            let g:intero_built = 1
+            call intero#process#start()
+        else
+            echom "Intero failed to compile."
+        endif
+    endif
+endfunction
+
