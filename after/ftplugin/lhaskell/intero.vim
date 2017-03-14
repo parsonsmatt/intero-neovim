@@ -1,1 +1,1 @@
-../haskell/ghcmod.vim
+../haskell/intero.vim
