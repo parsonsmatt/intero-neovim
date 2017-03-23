@@ -1,7 +1,7 @@
-if exists('b:did_plugin_intero') && b:did_plugin_intero
+if exists('g:did_plugin_intero') && g:did_plugin_intero
     finish
 endif
-let b:did_plugin_intero = 1
+let g:did_plugin_intero = 1
 
 if !has('patch-7.4.1578')
     echom "This version of intero-neovim requires the `timer_start` feature, which your neovim version lacks."

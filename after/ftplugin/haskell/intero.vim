@@ -1,7 +1,7 @@
-if exists('b:did_ftplugin_intero') && b:did_ftplugin_intero
+if exists('g:did_ftplugin_intero') && g:did_ftplugin_intero
     finish
 endif
-let b:did_ftplugin_intero = 1
+let g:did_ftplugin_intero = 1
 
 call intero#process#ensure_installed()
 
@@ -11,16 +11,6 @@ else
     let b:undo_ftplugin = ''
 endif
 
-let b:undo_ftplugin .= join(map([
-            \ 'InteroType',
-            \ 'InteroGenericType',
-            \ 'InteroOpen',
-            \ 'InteroKill',
-            \ 'InteroHide',
-            \ 'InteroLoadCurrentModule',
-            \ 'InteroEval',
-            \ 'InteroGoToDef',
-            \ ], '"delcommand " . v:val'), ' | ')
-let b:undo_ftplugin .= ' | unlet b:did_ftplugin_intero'
+let b:undo_ftplugin .= 'unlet g:did_ftplugin_intero'
 
 " vim: set ts=4 sw=4 et fdm=marker:
