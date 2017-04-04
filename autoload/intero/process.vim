@@ -26,7 +26,7 @@ function! intero#process#ensure_installed()
     if (!exists("g:intero_stack_yaml"))
         " Change dir temporarily and see if stack can find a config
         silent! lcd %:p:h
-        let g:intero_stack_yaml = systemlist('stack path --config-location')[0]
+        let g:intero_stack_yaml = systemlist('stack path --config-location')[-1]
         silent! lcd -
     endif
 
