@@ -18,7 +18,7 @@ endfunction
 function! intero#util#path_to_module(path)
     " Converts a path like `src/Main/Foo/Bar.hs` to Main.Foo.Bar
     return substitute(
-        \ join(split(substitute(a:path, "^[A-Z ]*/", "", ""), '/') , '.'),
+        \ join(split(substitute(a:path, "^[A-Za-z ]*/", "", ""), '/') , '.'),
         \ "\.hs", "", "")
 endfunction
 
