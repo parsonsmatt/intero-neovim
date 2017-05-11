@@ -13,7 +13,7 @@ function! intero#loc#get_identifier_information()
     " Returns information about the identifier under the point. Return type is
     " a dictionary with the keys 'module', 'line', 'beg_col', 'end_col', and
     " 'identifier'.
-    let l:module = intero#util#path_to_module(expand('%'))
+    let l:module = intero#detect_module()
     let l:line = line('.')
     let l:identifier = intero#util#get_haskell_identifier()
     let l:winview = winsaveview()
