@@ -83,32 +83,46 @@ endfunction
 """"""""""
 
 function s:paste_type(timer)
-    let l:signature = join(intero#repl#get_last_response(), "\n")
+    let l:signature = intero#repl#get_last_response()
     call append(line(".")-1, l:signature)
 endfunction
 
 function! s:get_last_response()
-    " Returns the previous response.
-    let l:last_line = s:get_last_line()
-    let l:lines = s:get_prev_matching(l:last_line[0:-1])
-    return l:lines[0:-2]
-endfunction
+    let l:prompt = s:get_last_line()
 
-function! s:get_prev_matching(str)
     call s:switch_to_repl()
 
-    let l:end = line('$')
-    call cursor(l:end - 1, 0)
-    let l:go_up = search(a:str, 'bn')
-    let l:ret = getline(l:go_up + 1, l:end)
+    " Find the last two instances of the prompt.
+    call cursor(line('$'), 0)
+    let l:last_prompt_line = search(l:prompt, 'b')
+    let l:prev_prompt_line = search(l:prompt, 'b')
+    call cursor(line('$'), 0)
+
+    " For a reason that escapes me, it's possible for these values to be the
+    " wrong way around (possible race condition?)
+    if l:last_prompt_line < l:prev_prompt_line
+        let l:tmp = l:last_prompt_line
+        let l:last_prompt_line = l:prev_prompt_line
+        let l:prev_prompt_line = l:tmp
+    endif
+
+
+    if l:last_prompt_line == 0 || l:prev_prompt_line == 0
+        " The last line is unique, which means there's no response yet
+        let l:ret = []
+        echoerr 'Could not find prompt: ' l:prompt
+    else
+        let l:ret = getbufline(g:intero_buffer_id, l:prev_prompt_line + 1, l:last_prompt_line - 1)
+    endif
+
+    if len(l:ret) == 0
+        echoerr 'Failed to find info'
+        echo [l:prompt, l:prev_prompt_line, l:last_prompt_line, l:ret]
+    endif
 
     call s:return_from_repl()
 
     return l:ret
-endfunction
-
-function! s:get_last_line()
-    return join(s:get_line_repl(0))
 endfunction
 
 function! s:repl_hidden()
@@ -149,10 +163,9 @@ function! s:return_from_repl()
     exe s:current_window . 'wincmd w'
 endfunction
 
-function! s:get_line_repl(n)
-    " Retrieves the second to last line from the Intero repl. The most recent
-    " line will always be a prompt.
+function! s:get_last_line()
+    " Retrieves the last non-blank line from the Intero repl, which should be
+    " a prompt.
     python import vim
-    let l:last_line = pyeval('len(vim.buffers[' . g:intero_buffer_id . '])')
-    return getbufline(g:intero_buffer_id, l:last_line - a:n, l:last_line)
+    return pyeval('filter(lambda s: len(s) != 0, vim.buffers[int(vim.eval("g:intero_buffer_id"))])[-1]')
 endfunction

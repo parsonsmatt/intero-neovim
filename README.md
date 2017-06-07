@@ -108,6 +108,9 @@ autocompletion using `deoplete` or `omnicomplete`. If you have good reason for
 wanting Intero-provided completion, please [post in the related
 issue](https://github.com/parsonsmatt/intero-neovim/issues/5).
 
+## Known Issues
+* some commands may have unexpected side-effects if you have a autocmd that automatically switches to insert mode when entering a terminal buffer
+
 ## License
 
 [BSD3 License](http://www.opensource.org/licenses/BSD-3-Clause), the same license as ghcmod-vim.
