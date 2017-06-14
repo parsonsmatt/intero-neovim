@@ -5,6 +5,18 @@
 " includes ensuring that Intero is installed, starting/killing the
 " process, and hiding/showing the REPL.
 """""""""""
+" Lines of output consistuting of a command and the response to it
+let s:current_response = []
+
+" The current (incomplete) line
+let s:current_line = ''
+
+" Whether Intero has finished starting yet
+let g:intero_started = 0
+
+" If true, echo the next response. Reset after each response.
+let g:intero_echo_next = 0
+
 
 function! intero#process#ensure_installed()
     " This function ensures that intero is installed. If `stack` exits with a
@@ -104,41 +116,6 @@ endfunction
 " Private:
 """"""""""
 
-function! s:term_buffer(job_id, data, event)
-    " let g:intero_last_response = intero#repl#get_last_response()
-endfunction
-
-function! s:on_response(timer)
-    if !exists('g:intero_buffer_id')
-      return
-    endif
-
-    let l:mode = mode()
-
-    if ! (exists('g:intero_should_echo') && g:intero_should_echo)
-        return
-    endif
-
-    if l:mode =~ "c" || l:mode =~ "t"
-        return
-    endif
-
-    let l:current_response = intero#repl#get_last_response()
-
-    if !exists('s:previous_response')
-        let s:previous_response = l:current_response
-    endif
-
-    if l:current_response != s:previous_response
-        let s:previous_response = l:current_response
-        for r in s:previous_response
-            echom r
-        endfor
-        echo join(s:previous_response, "\n")
-        let g:intero_should_echo = 0
-    endif
-endfunction
-
 function! s:start_compile(height, opts)
     " Starts an Intero compiling in a split below the current buffer.
     " Returns the ID of the buffer.
@@ -146,8 +123,6 @@ function! s:start_compile(height, opts)
 
     enew!
     call termopen('stack ' . intero#util#stack_opts() . ' build intero', a:opts)
-    " startinsert
-    " exe 'terminal! stack ' . intero#util#stack_opts() . ' build intero'
 
     set bufhidden=hide
     set noswapfile
@@ -155,7 +130,6 @@ function! s:start_compile(height, opts)
     let l:buffer_id = bufnr('%')
     let g:intero_job_id = b:terminal_job_id
     call feedkeys("\<ESC>")
-    call timer_start(100, function('s:on_response'), {'repeat':-1})
     wincmd w
     return l:buffer_id
 endfunction
@@ -164,7 +138,15 @@ function! s:start_buffer(height)
     " Starts an Intero REPL in a split below the current buffer. Returns the
     " ID of the buffer.
     exe 'below ' . a:height . ' split'
-    exe 'terminal! stack ' . intero#util#stack_opts() . ' ghci --with-ghc intero'
+
+    enew
+    py import os.path
+    let l:stack_dir = pyeval('os.path.dirname("' . g:intero_stack_yaml . '")')
+    call termopen('stack ' . intero#util#stack_opts() . ' ghci --with-ghc intero', {
+                \ 'on_stdout': function('s:on_stdout'),
+                \ 'cwd': l:stack_dir
+                \ })
+
     set bufhidden=hide
     set noswapfile
     set hidden
@@ -172,8 +154,77 @@ function! s:start_buffer(height)
     let g:intero_job_id = b:terminal_job_id
     quit
     call feedkeys("\<ESC>")
-    call timer_start(100, function('s:on_response'), {'repeat':-1})
     return l:buffer_id
+endfunction
+
+function! s:on_stdout(jobid, lines, event)
+    for line_seg in a:lines
+        let s:current_line = s:current_line . l:line_seg
+
+        " If we've found a newline, flush the line buffer
+        if s:current_line =~ '\r$'
+            " Remove trailing newline
+            let s:current_line = substitute(s:current_line, '\r$', '', '')
+
+            " Using Python because raw strings make this much easier to read
+            if !exists('s:ansi_re_init')
+                python << EOF
+import re
+regexes = [
+    # Filter out ANSI codes - they are needed for interactive use, but we don't care about them.
+    # Regex from: https://stackoverflow.com/questions/14693701/how-can-i-remove-the-ansi-escape-sequences-from-a-string-in-python
+    # Note that we replace [0-?] with [0-Z] to filter out the arrow keys as well (xterm codes)
+    re.compile(r"(\x9B|\x1B\[)[0-Z]*[ -\/]*[@-~]"),
+    # Filter out DECPAM/DECPNM, since they're emitted as well
+    # Source: https://www.xfree86.org/4.8.0/ctlseqs.html
+    re.compile(r"\x1B[>=]")
+    ]
+def strip_ansi():
+    current_line = vim.eval('s:current_line')
+
+    for r in regexes:
+        current_line = r.sub("", current_line)
+
+    return current_line
+EOF
+                let s:ansi_re_init = 1
+            endif
+
+            let s:current_line = pyeval('strip_ansi()')
+
+            " Flush line buffer
+            let s:current_response = s:current_response + [s:current_line]
+            let s:current_line = ''
+        endif
+
+        " If the current line is a prompt, we just completed a response
+        if s:current_line =~ '> $'
+            if len(s:current_response) > 0
+                " The first line is the input command, so we discard it
+                call s:new_response(s:current_response[1:])
+            endif
+
+            let s:current_response = []
+        endif
+
+    endfor
+endfunction
+
+function! s:new_response(response)
+    " This means that Intero is now available to run commands
+    " TODO: ignore commands until this is set
+    if !g:intero_started
+        echom 'Intero started'
+        let g:intero_started = 1
+    endif
+
+    " For debugging
+    let g:intero_response = a:response
+
+    if g:intero_echo_next
+        echo join(a:response, "\n")
+        let g:intero_echo_next = 0
+    endif
 endfunction
 
 function! s:open_window(height)

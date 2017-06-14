@@ -18,7 +18,7 @@ function! intero#repl#eval(...)
         return
     endif
 
-    let g:intero_should_echo = 1
+    let g:intero_echo_next = 1
     call intero#repl#send(l:eval)
 endfunction
 
