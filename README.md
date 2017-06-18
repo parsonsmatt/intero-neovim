@@ -38,10 +38,9 @@ nnoremap <Leader>hiu :InteroUses<CR>
 autocmd! BufWritePost *.hs InteroReload
 ```
 
-If you need to use a specific `stack.yaml` file, you can set either of `STACK_YAML`
-or `g:intero_stack_yaml` before invoking a command.
-
 ![REPL demo](demo-repl-lo.gif)
+
+## Commands
 
 The following commands are available:
 
@@ -100,6 +99,15 @@ first.
 ### `InteroKill`
 
 Kills the Intero process and buffer.
+
+## Configuration
+
+If you need to use a specific `stack.yaml` file, you can set either of `STACK_YAML`
+or `g:intero_stack_yaml` before invoking a command.
+
+If you use a custom prompt in GHCi, then you may need to modify the regex for it. The default is
+
+    let g:Intero_prompt_regex = '[^-]> $'
 
 ## Completion
 

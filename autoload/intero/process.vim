@@ -191,6 +191,10 @@ EOF
         let s:ansi_re_init = 1
     endif
 
+    if !exists('g:intero_prompt_regex')
+        let g:Intero_prompt_regex = '[^-]> $'
+    endif
+
     for line_seg in a:lines
         let s:current_line = s:current_line . l:line_seg
 
@@ -206,8 +210,7 @@ EOF
         endif
 
         " If the current line is a prompt, we just completed a response
-        " TODO: make this configurable
-        if s:current_line =~ '[^-]> $'
+        if s:current_line =~ g:intero_prompt_regex
             echom string(['new response', s:current_line, s:current_response])
 
             if len(s:current_response) > 0
