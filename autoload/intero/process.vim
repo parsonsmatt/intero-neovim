@@ -17,6 +17,9 @@ let g:intero_started = 0
 " If true, echo the next response. Reset after each response.
 let g:intero_echo_next = 0
 
+" Queue of functions to run when a response is received. For a given response,
+" only the first will be run, after which it will be dropped from the queue.
+let s:response_handlers = []
 
 function! intero#process#ensure_installed()
     " This function ensures that intero is installed. If `stack` exits with a
@@ -112,6 +115,11 @@ function! intero#process#open()
     endif
 endfunction
 
+function! intero#process#add_handler(func)
+    " Adds an event handler to the queue
+    let s:response_handlers = s:response_handlers + [a:func]
+endfunction
+
 """"""""""
 " Private:
 """"""""""
@@ -158,17 +166,10 @@ function! s:start_buffer(height)
 endfunction
 
 function! s:on_stdout(jobid, lines, event)
-    for line_seg in a:lines
-        let s:current_line = s:current_line . l:line_seg
-
-        " If we've found a newline, flush the line buffer
-        if s:current_line =~ '\r$'
-            " Remove trailing newline
-            let s:current_line = substitute(s:current_line, '\r$', '', '')
-
-            " Using Python because raw strings make this much easier to read
-            if !exists('s:ansi_re_init')
-                python << EOF
+    " Initialise regex handling code
+    " Using Python because raw strings make this much easier to read
+    if !exists('s:ansi_re_init')
+        python << EOF
 import re
 regexes = [
     # Filter out ANSI codes - they are needed for interactive use, but we don't care about them.
@@ -187,9 +188,16 @@ def strip_ansi():
 
     return current_line
 EOF
-                let s:ansi_re_init = 1
-            endif
+        let s:ansi_re_init = 1
+    endif
 
+    for line_seg in a:lines
+        let s:current_line = s:current_line . l:line_seg
+
+        " If we've found a newline, flush the line buffer
+        if s:current_line =~ '\r$'
+            " Remove trailing newline, control chars
+            let s:current_line = substitute(s:current_line, '\r$', '', '')
             let s:current_line = pyeval('strip_ansi()')
 
             " Flush line buffer
@@ -198,9 +206,13 @@ EOF
         endif
 
         " If the current line is a prompt, we just completed a response
-        if s:current_line =~ '> $'
+        " TODO: make this configurable
+        if s:current_line =~ '[^-]> $'
+            echom string(['new response', s:current_line, s:current_response])
+
             if len(s:current_response) > 0
                 " The first line is the input command, so we discard it
+                " echoerr string(['DEBUG', s:current_response])
                 call s:new_response(s:current_response[1:])
             endif
 
@@ -224,6 +236,12 @@ function! s:new_response(response)
     if g:intero_echo_next
         echo join(a:response, "\n")
         let g:intero_echo_next = 0
+    endif
+
+    " If a handler has been registered, pop it and run it
+    if len(s:response_handlers) > 0
+        call s:response_handlers[0](a:response)
+        let s:response_handlers = s:response_handlers[1:]
     endif
 endfunction
 

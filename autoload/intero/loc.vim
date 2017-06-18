@@ -6,7 +6,7 @@
 
 function! intero#loc#go_to_def()
     call intero#repl#send(intero#util#make_command(':loc-at'))
-    call timer_start(100, function('s:do_the_hop'), { 'repeat': 1 })
+    call intero#process#add_handler(function('s:handle_loc'))
 endfunction
 
 function! intero#loc#get_identifier_information()
@@ -30,8 +30,8 @@ endfunction
 " Private:
 """"""""""
 
-function! s:do_the_hop(timer)
-    let l:response = join(intero#repl#get_last_response(), "\n")
+function! s:handle_loc(resp)
+    let l:response = join(a:resp, "\n")
     let l:split = split(l:response, ':')
     if len(l:split) != 2
         echom l:response

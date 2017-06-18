@@ -3,11 +3,6 @@ if exists('g:did_plugin_intero') && g:did_plugin_intero
 endif
 let g:did_plugin_intero = 1
 
-if !has('patch-7.4.1578')
-    echom "This version of intero-neovim requires the `timer_start` feature, which your neovim version lacks."
-    finish
-endif
-
 " Starts the Intero process in the background.
 command! -nargs=0 -bang InteroStart call intero#process#start()
 " Kills the Intero process.
