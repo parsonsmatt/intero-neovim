@@ -15,13 +15,6 @@ function! intero#util#get_intero_window()
     return bufwinnr('stack ' .  intero#util#stack_opts() . ' ghci --with-ghc intero')
 endfunction
 
-function! intero#util#path_to_module(path)
-    " Converts a path like `src/Main/Foo/Bar.hs` to Main.Foo.Bar
-    return substitute(
-        \ join(split(substitute(a:path, "^[A-Za-z ]*/", "", ""), '/') , '.'),
-        \ "\.hs", "", "")
-endfunction
-
 function! intero#util#make_command(cmd)
     let info = intero#loc#get_identifier_information()
     return join([a:cmd, info.module, info.line, info.beg_col, info.line, info.end_col, info.identifier], ' ')
