@@ -192,7 +192,7 @@ EOF
     endif
 
     if !exists('g:intero_prompt_regex')
-        let g:Intero_prompt_regex = '[^-]> $'
+        let g:intero_prompt_regex = '[^-]> $'
     endif
 
     for line_seg in a:lines
