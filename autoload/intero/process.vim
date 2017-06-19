@@ -215,7 +215,6 @@ EOF
 
             if len(s:current_response) > 0
                 " The first line is the input command, so we discard it
-                " echoerr string(['DEBUG', s:current_response])
                 call s:new_response(s:current_response[1:])
             endif
 
