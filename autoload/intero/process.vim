@@ -211,8 +211,6 @@ EOF
 
         " If the current line is a prompt, we just completed a response
         if s:current_line =~ g:intero_prompt_regex
-            echom string(['new response', s:current_line, s:current_response])
-
             if len(s:current_response) > 0
                 " The first line is the input command, so we discard it
                 call s:new_response(s:current_response[1:])
