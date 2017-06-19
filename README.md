@@ -38,10 +38,9 @@ nnoremap <Leader>hiu :InteroUses<CR>
 autocmd! BufWritePost *.hs InteroReload
 ```
 
-If you need to use a specific `stack.yaml` file, you can set either of `STACK_YAML`
-or `g:intero_stack_yaml` before invoking a command.
-
 ![REPL demo](demo-repl-lo.gif)
+
+## Commands
 
 The following commands are available:
 
@@ -101,12 +100,24 @@ first.
 
 Kills the Intero process and buffer.
 
+## Configuration
+
+If you need to use a specific `stack.yaml` file, you can set either of `STACK_YAML`
+or `g:intero_stack_yaml` before invoking a command.
+
+If you use a custom prompt in GHCi, then you may need to modify the regex for it. The default is
+
+    let g:Intero_prompt_regex = '[^-]> $'
+
 ## Completion
 
 Completion is not handled by this plugin. Check out [neco-ghc][] for fast
 autocompletion using `deoplete` or `omnicomplete`. If you have good reason for
 wanting Intero-provided completion, please [post in the related
 issue](https://github.com/parsonsmatt/intero-neovim/issues/5).
+
+## Known Issues
+* some commands may have unexpected side-effects if you have a autocmd that automatically switches to insert mode when entering a terminal buffer
 
 ## License
 
