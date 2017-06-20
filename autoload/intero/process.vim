@@ -195,7 +195,7 @@ EOF
         let g:intero_prompt_regex = '[^-]> $'
     endif
 
-    for line_seg in a:lines
+    for l:line_seg in a:lines
         let s:current_line = s:current_line . l:line_seg
 
         " If we've found a newline, flush the line buffer

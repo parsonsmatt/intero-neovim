@@ -16,8 +16,8 @@ function! intero#util#get_intero_window() abort
 endfunction
 
 function! intero#util#make_command(cmd) abort
-    let info = intero#loc#get_identifier_information()
-    return join([a:cmd, info.module, info.line, info.beg_col, info.line, info.end_col, info.identifier], ' ')
+    let l:info = intero#loc#get_identifier_information()
+    return join([a:cmd, l:info.module, l:info.line, l:info.beg_col, l:info.line, l:info.end_col, l:info.identifier], ' ')
 endfunction
 
 """"""""""
@@ -26,14 +26,14 @@ endfunction
 "
 " Return the current haskell identifier
 function! intero#util#get_haskell_identifier() abort
-    let c = col ('.')-1
-    let l = line('.')
-    let ll = getline(l)
-    let ll1 = strpart(ll,0,c)
-    let ll1 = matchstr(ll1,"[a-zA-Z0-9_'.]*$")
-    let ll2 = strpart(ll,c,strlen(ll)-c+1)
-    let ll2 = matchstr(ll2,"^[a-zA-Z0-9_'.]*")
-    return ll1.ll2
+    let l:c = col ('.') - 1
+    let l:l = line('.')
+    let l:ll = getline(l:l)
+    let l:ll1 = strpart(l:ll, 0, l:c)
+    let l:ll1 = matchstr(l:ll1, "[a-zA-Z0-9_'.]*$")
+    let l:ll2 = strpart(l:ll, l:c, strlen(l:ll) - l:c + 1)
+    let l:ll2 = matchstr(l:ll2, "^[a-zA-Z0-9_'.]*")
+    return l:ll1 . l:ll2
 endfunction "}}}
 
 function! intero#util#print_warning(msg) abort "{{{

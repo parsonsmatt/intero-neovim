@@ -66,11 +66,11 @@ function! intero#repl#reload() abort
 endfunction
 
 function! intero#repl#uses() abort
-    let info = intero#loc#get_identifier_information()
+    let l:info = intero#loc#get_identifier_information()
     call intero#repl#send(intero#util#make_command(':uses'))
-    exec 'normal! /' . info.identifier . "\<CR>N"
+    exec 'normal! /' . l:info.identifier . "\<CR>N"
     set hlsearch
-    let @/ = info.identifier
+    let @/ = l:info.identifier
 endfunction
 
 """"""""""
