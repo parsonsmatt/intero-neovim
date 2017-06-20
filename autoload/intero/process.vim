@@ -202,7 +202,7 @@ function! s:new_response(response) abort
     " This means that Intero is now available to run commands
     " TODO: ignore commands until this is set
     if !g:intero_started
-        echom 'Intero started'
+        echom 'Intero ready'
         let g:intero_started = 1
     endif
 
