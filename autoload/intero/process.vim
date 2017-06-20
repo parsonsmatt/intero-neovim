@@ -21,7 +21,7 @@ let g:intero_echo_next = 0
 " only the first will be run, after which it will be dropped from the queue.
 let s:response_handlers = []
 
-function! intero#process#ensure_installed()
+function! intero#process#ensure_installed() abort
     " This function ensures that intero is installed. If `stack` exits with a
     " non-0 exit code, that means it failed to find the executable.
     "
@@ -59,7 +59,7 @@ function! intero#process#ensure_installed()
     endif
 endfunction
 
-function! intero#process#start()
+function! intero#process#start() abort
     " Starts an intero terminal buffer, initially only occupying a small area.
     " Returns the intero buffer id.
     if(!exists('g:intero_built') || g:intero_built == 0)
@@ -81,7 +81,7 @@ function! intero#process#start()
     return g:intero_buffer_id
 endfunction
 
-function! intero#process#kill()
+function! intero#process#kill() abort
     " Kills the intero buffer, if it exists.
     if exists('g:intero_buffer_id')
         exe 'bd! ' . g:intero_buffer_id
@@ -91,12 +91,12 @@ function! intero#process#kill()
     endif
 endfunction
 
-function! intero#process#hide()
+function! intero#process#hide() abort
     " Hides the current buffer without killing the process.
     silent! call s:hide_buffer()
 endfunction
 
-function! intero#process#open()
+function! intero#process#open() abort
     " Opens the Intero REPL. If the REPL isn't currently running, then this
     " creates it. If the REPL is already running, this is a noop. Returns the
     " window ID.
@@ -115,7 +115,7 @@ function! intero#process#open()
     endif
 endfunction
 
-function! intero#process#add_handler(func)
+function! intero#process#add_handler(func) abort
     " Adds an event handler to the queue
     let s:response_handlers = s:response_handlers + [a:func]
 endfunction
@@ -124,7 +124,7 @@ endfunction
 " Private:
 """"""""""
 
-function! s:start_compile(height, opts)
+function! s:start_compile(height, opts) abort
     " Starts an Intero compiling in a split below the current buffer.
     " Returns the ID of the buffer.
     exe 'below ' . a:height . ' split'
@@ -142,7 +142,7 @@ function! s:start_compile(height, opts)
     return l:buffer_id
 endfunction
 
-function! s:start_buffer(height)
+function! s:start_buffer(height) abort
     " Starts an Intero REPL in a split below the current buffer. Returns the
     " ID of the buffer.
     exe 'below ' . a:height . ' split'
@@ -165,7 +165,7 @@ function! s:start_buffer(height)
     return l:buffer_id
 endfunction
 
-function! s:on_stdout(jobid, lines, event)
+function! s:on_stdout(jobid, lines, event) abort
     " Initialise regex handling code
     " Using Python because raw strings make this much easier to read
     if !exists('s:ansi_re_init')
@@ -222,7 +222,7 @@ EOF
     endfor
 endfunction
 
-function! s:new_response(response)
+function! s:new_response(response) abort
     " This means that Intero is now available to run commands
     " TODO: ignore commands until this is set
     if !g:intero_started
@@ -245,13 +245,13 @@ function! s:new_response(response)
     endif
 endfunction
 
-function! s:open_window(height)
+function! s:open_window(height) abort
     " Opens a window of a:height and moves it to the very bottom.
     exe 'below ' . a:height . ' split'
     normal! <C-w>J
 endfunction
 
-function! s:hide_buffer()
+function! s:hide_buffer() abort
     " This closes the Intero REPL buffer without killing the process.
     let l:window_number = intero#util#get_intero_window()
     if l:window_number > 0

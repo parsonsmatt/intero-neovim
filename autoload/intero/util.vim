@@ -5,17 +5,17 @@
 " don't fit specifically in any one.
 """""""""
 
-function! intero#util#stack_opts()
+function! intero#util#stack_opts() abort
     return '--stack-yaml ' . g:intero_stack_yaml
 endfunction
 
-function! intero#util#get_intero_window()
+function! intero#util#get_intero_window() abort
     " Returns the window ID that the Intero process is on, or -1 if it isn't
     " found.
     return bufwinnr('stack ' .  intero#util#stack_opts() . ' ghci --with-ghc intero')
 endfunction
 
-function! intero#util#make_command(cmd)
+function! intero#util#make_command(cmd) abort
     let info = intero#loc#get_identifier_information()
     return join([a:cmd, info.module, info.line, info.beg_col, info.line, info.end_col, info.identifier], ' ')
 endfunction
@@ -25,7 +25,7 @@ endfunction
 """"""""""
 "
 " Return the current haskell identifier
-function! intero#util#get_haskell_identifier()
+function! intero#util#get_haskell_identifier() abort
     let c = col ('.')-1
     let l = line('.')
     let ll = getline(l)
@@ -36,19 +36,19 @@ function! intero#util#get_haskell_identifier()
     return ll1.ll2
 endfunction "}}}
 
-function! intero#util#print_warning(msg) "{{{
+function! intero#util#print_warning(msg) abort "{{{
     echohl WarningMsg
     echomsg a:msg
     echohl None
 endfunction "}}}
 
-function! intero#util#print_error(msg) "{{{
+function! intero#util#print_error(msg) abort "{{{
     echohl ErrorMsg
     echomsg a:msg
     echohl None
 endfunction "}}}
 
-function! intero#util#getcol() "{{{
+function! intero#util#getcol() abort "{{{
     let l:line = line('.')
     let l:col = col('.')
     let l:str = getline(l:line)[:(l:col - 1)]
@@ -56,7 +56,7 @@ function! intero#util#getcol() "{{{
     return l:col + 7 * l:tabcnt
 endfunction "}}}
 
-function! intero#util#tocol(line, col) "{{{
+function! intero#util#tocol(line, col) abort "{{{
     let l:str = getline(a:line)
     let l:len = len(l:str)
     let l:col = 0

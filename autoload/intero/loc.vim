@@ -4,12 +4,12 @@
 " This file contains code for parsing locations and jumping to them.
 """"""""""
 
-function! intero#loc#go_to_def()
+function! intero#loc#go_to_def() abort
     call intero#repl#send(intero#util#make_command(':loc-at'))
     call intero#process#add_handler(function('s:handle_loc'))
 endfunction
 
-function! intero#loc#get_identifier_information()
+function! intero#loc#get_identifier_information() abort
     " Returns information about the identifier under the point. Return type is
     " a dictionary with the keys 'module', 'line', 'beg_col', 'end_col', and
     " 'identifier'.
@@ -30,7 +30,7 @@ endfunction
 " Private:
 """"""""""
 
-function! s:handle_loc(resp)
+function! s:handle_loc(resp) abort
     let l:response = join(a:resp, "\n")
     let l:split = split(l:response, ':')
     if len(l:split) != 2

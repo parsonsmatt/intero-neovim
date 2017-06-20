@@ -1,9 +1,9 @@
-function! intero#highlight_group() "{{{
+function! intero#highlight_group() abort "{{{
     return get(g:, 'intero_type_highlight', 'Search')
 endfunction "}}}
 
 " Return the current haskell identifier
-function! intero#getHaskellIdentifier() "{{{
+function! intero#getHaskellIdentifier() abort "{{{
     let c = col ('.')-1
     let l = line('.')
     let ll = getline(l)
@@ -14,7 +14,7 @@ function! intero#getHaskellIdentifier() "{{{
     return ll1.ll2
 endfunction "}}}
 
-function! intero#info(fexp, path, ...) "{{{
+function! intero#info(fexp, path, ...) abort "{{{
     let l:cmd = intero#build_command(["-b \n", 'info', a:path, a:fexp])
     let l:output = intero#system(l:cmd)
     " Remove trailing newlines to prevent empty lines
@@ -22,7 +22,7 @@ function! intero#info(fexp, path, ...) "{{{
     return s:remove_dummy_prefix(l:output)
 endfunction "}}}
 
-function! intero#split(line, col, path, ...) "{{{
+function! intero#split(line, col, path, ...) abort "{{{
     " `ghc-mod split` is available since v5.0.0.
     let l:cmd = intero#build_command(['split', a:path, a:line, a:col])
     let l:lines = s:system('split', l:cmd)
@@ -36,7 +36,7 @@ function! intero#split(line, col, path, ...) "{{{
     return split(l:parsed[5], '\n')
 endfunction "}}}
 
-function! intero#sig(line, col, path, ...) "{{{
+function! intero#sig(line, col, path, ...) abort "{{{
     " `ghc-mod sig` is available since v5.0.0.
     let l:cmd = intero#build_command(['sig', a:path, a:line, a:col])
     let l:lines = s:system('sig', l:cmd)
@@ -46,7 +46,7 @@ function! intero#sig(line, col, path, ...) "{{{
     return [l:lines[0], l:lines[2 :]]
 endfunction "}}}
 
-function! intero#type(line, col, path, ...) "{{{
+function! intero#type(line, col, path, ...) abort "{{{
     let l:cmd = intero#build_command(['type', a:path, a:line, a:col])
     let l:output = intero#system(l:cmd)
     let l:types = []
@@ -59,7 +59,7 @@ function! intero#type(line, col, path, ...) "{{{
     return l:types
 endfunction "}}}
 
-function! intero#detect_module() "{{{
+function! intero#detect_module() abort "{{{
     let l:regex = '^\C>\=\s*module\s\+\zs[A-Za-z0-9.]\+'
     for l:lineno in range(1, line('$'))
         let l:line = getline(l:lineno)
@@ -75,7 +75,7 @@ function! intero#detect_module() "{{{
     return 'Main'
 endfunction "}}}
 
-function! s:fix_qf_lnum_col(qf) "{{{
+function! s:fix_qf_lnum_col(qf) abort "{{{
     " ghc-mod reports dummy error message with lnum=0 and col=0.
     " This is not suitable for Vim, so tweak them.
     for l:key in ['lnum', 'col']
@@ -85,7 +85,7 @@ function! s:fix_qf_lnum_col(qf) "{{{
     endfor
 endfunction "}}}
 
-function! intero#parse_make(lines, basedir) "{{{
+function! intero#parse_make(lines, basedir) abort "{{{
     " `ghc-mod check` and `ghc-mod lint` produces <NUL> characters but Vim cannot
     " treat them correctly.  Vim converts <NUL> characters to <NL> in readfile().
     " See also :help readfile() and :help NL-used-for-Nul.
@@ -135,7 +135,7 @@ function! intero#parse_make(lines, basedir) "{{{
     return l:qflist
 endfunction "}}}
 
-function! s:build_make_command(type, path) "{{{
+function! s:build_make_command(type, path) abort "{{{
     let l:cmd = intero#build_command([a:type])
     if a:type ==# 'lint'
         for l:hopt in get(g:, 'intero_hlint_options', [])
@@ -146,7 +146,7 @@ function! s:build_make_command(type, path) "{{{
     return l:cmd
 endfunction "}}}
 
-function! intero#make(type, path) "{{{
+function! intero#make(type, path) abort "{{{
     try
         let l:args = s:build_make_command(a:type, a:path)
         return intero#parse_make(s:system(a:type, l:args), b:intero_basedir)
@@ -155,7 +155,7 @@ function! intero#make(type, path) "{{{
     endtry
 endfunction "}}}
 
-function! intero#async_make(type, path, callback) "{{{
+function! intero#async_make(type, path, callback) abort "{{{
     let l:tmpfile = tempname()
     let l:args = s:build_make_command(a:type, a:path)
     let l:proc = s:plineopen3([{'args': l:args,  'fd': { 'stdin': '', 'stdout': l:tmpfile, 'stderr': '' }}])
@@ -166,7 +166,7 @@ function! intero#async_make(type, path, callback) "{{{
                 \ 'type': a:type,
                 \ 'basedir': intero#basedir(),
                 \ }
-    function! l:obj.on_finish(cond, status)
+    function! l:obj.on_finish(cond, status) abort
         let l:qflist = intero#parse_make(readfile(self.tmpfile), self.basedir)
         call delete(self.tmpfile)
         call self.callback.on_finish(l:qflist)
@@ -179,7 +179,7 @@ function! intero#async_make(type, path, callback) "{{{
     endif
 endfunction "}}}
 
-function! intero#expand(path) "{{{
+function! intero#expand(path) abort "{{{
     let l:dir = fnamemodify(a:path, ':h')
 
     let l:qflist = []
@@ -228,11 +228,11 @@ function! intero#expand(path) "{{{
     return l:qflist
 endfunction "}}}
 
-function! s:remove_dummy_prefix(str) "{{{
+function! s:remove_dummy_prefix(str) abort "{{{
     return substitute(a:str, '^Dummy:0:0:Error:', '', '')
 endfunction "}}}
 
-function! intero#add_autogen_dir(path, cmd) "{{{
+function! intero#add_autogen_dir(path, cmd) abort "{{{
     " detect autogen directory
     let l:autogen_dir = a:path . '/autogen'
     if isdirectory(l:autogen_dir)
@@ -244,7 +244,7 @@ function! intero#add_autogen_dir(path, cmd) "{{{
     endif
 endfunction "}}}
 
-function! intero#build_command(args) "{{{
+function! intero#build_command(args) abort "{{{
     let l:cmd = ['ghc-mod', '--silent']
 
     let l:dist_top  = s:find_basedir() . '/dist'
@@ -279,7 +279,7 @@ function! intero#build_command(args) "{{{
     return l:cmd
 endfunction "}}}
 
-function! intero#system(...) "{{{
+function! intero#system(...) abort "{{{
     let l:dir = getcwd()
     try
         lcd `=intero#basedir()`
@@ -290,7 +290,7 @@ function! intero#system(...) "{{{
     return l:ret
 endfunction "}}}
 
-function! s:plineopen3(...) "{{{
+function! s:plineopen3(...) abort "{{{
     let l:dir = getcwd()
     try
         lcd `=intero#basedir()`
@@ -301,7 +301,7 @@ function! s:plineopen3(...) "{{{
     return l:ret
 endfunction "}}}
 
-function! s:system(type, args) "{{{
+function! s:system(type, args) abort "{{{
     let l:tmpfile = tempname()
     try
         let l:proc = s:plineopen3([{'args': a:args,  'fd': { 'stdin': '', 'stdout': l:tmpfile, 'stderr': '' }}])
@@ -324,7 +324,7 @@ function! s:system(type, args) "{{{
     endtry
 endfunction "}}}
 
-function! intero#basedir() "{{{
+function! intero#basedir() abort "{{{
     let l:use_basedir = get(g:, 'intero_use_basedir', '')
     if empty(l:use_basedir)
         return s:find_basedir()
@@ -333,7 +333,7 @@ function! intero#basedir() "{{{
     endif
 endfunction "}}}
 
-function! s:find_basedir() "{{{
+function! s:find_basedir() abort "{{{
     " search Cabal file
     if !exists('b:intero_basedir')
         " `ghc-mod root` is available since v4.0.0.
@@ -349,7 +349,7 @@ function! s:find_basedir() "{{{
     return b:intero_basedir
 endfunction "}}}
 
-function! intero#version() "{{{
+function! intero#version() abort "{{{
     return [1, 3, 1]
 endfunction "}}}
 

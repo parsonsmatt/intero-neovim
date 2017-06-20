@@ -4,7 +4,7 @@
 " This file contains code for sending commands to the Intero REPL.
 """"""""""
 
-function! intero#repl#eval(...)
+function! intero#repl#eval(...) abort
     " Given no arguments, this requests an expression from the user and
     " evaluates it in the Intero REPL.
     if a:0 == 0
@@ -22,12 +22,12 @@ function! intero#repl#eval(...)
     call intero#repl#send(l:eval)
 endfunction
 
-function! intero#repl#load_current_module()
+function! intero#repl#load_current_module() abort
     " Loads the current module, inferred from the given filename.
     call intero#repl#eval(':l ' . intero#detect_module())
 endfunction
 
-function! intero#repl#type(generic)
+function! intero#repl#type(generic) abort
     " Gets the type at the current point.
     let l:line = line('.')
     let l:col = intero#util#getcol()
@@ -42,12 +42,12 @@ function! intero#repl#type(generic)
         \ join([':type-at', l:module, l:line, l:col, l:line, l:col, l:identifier], ' '))
 endfunction
 
-function! intero#repl#info()
+function! intero#repl#info() abort
     let l:ident = intero#util#get_haskell_identifier()
     call intero#repl#eval(':info ' . l:ident)
 endfunction
 
-function! intero#repl#send(str)
+function! intero#repl#send(str) abort
     " Sends a:str to the Intero REPL.
     if !exists('g:intero_buffer_id')
         echomsg 'Intero not running.'
@@ -56,16 +56,16 @@ function! intero#repl#send(str)
     call jobsend(g:intero_job_id, add([a:str], ''))
 endfunction
 
-function! intero#repl#insert_type()
+function! intero#repl#insert_type() abort
     call intero#process#add_handler(function('s:paste_type'))
     call intero#repl#send(intero#util#make_command(':type-at'))
 endfunction
 
-function! intero#repl#reload()
+function! intero#repl#reload() abort
     call intero#repl#send(':r')
 endfunction
 
-function! intero#repl#uses()
+function! intero#repl#uses() abort
     let info = intero#loc#get_identifier_information()
     call intero#repl#send(intero#util#make_command(':uses'))
     exec 'normal! /' . info.identifier . "\<CR>N"
@@ -77,7 +77,7 @@ endfunction
 " Private:
 """"""""""
 
-function s:paste_type(response)
+function! s:paste_type(response) abort
     call append(line('.')-1, a:response)
 endfunction
 
