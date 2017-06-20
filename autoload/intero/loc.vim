@@ -13,7 +13,7 @@ function! intero#loc#get_identifier_information() abort
     " Returns information about the identifier under the point. Return type is
     " a dictionary with the keys 'module', 'line', 'beg_col', 'end_col', and
     " 'identifier'.
-    let l:module = intero#detect_module()
+    let l:module = intero#loc#detect_module()
     let l:line = line('.')
     let l:identifier = intero#util#get_haskell_identifier()
     let l:winview = winsaveview()
@@ -25,6 +25,22 @@ function! intero#loc#get_identifier_information() abort
     call winrestview(l:winview)
     return { 'module': l:module, 'line': l:line, 'beg_col': l:beg_col, 'end_col': l:end_col, 'identifier': l:identifier }
 endfunction
+
+function! intero#loc#detect_module() abort "{{{
+    let l:regex = '^\C>\=\s*module\s\+\zs[A-Za-z0-9.]\+'
+    for l:lineno in range(1, line('$'))
+        let l:line = getline(l:lineno)
+        let l:pos = match(l:line, l:regex)
+        if l:pos != -1
+            let l:synname = synIDattr(synID(l:lineno, l:pos+1, 0), 'name')
+            if l:synname !~# 'Comment'
+                return matchstr(l:line, l:regex)
+            endif
+        endif
+        let l:lineno += 1
+    endfor
+    return 'Main'
+endfunction "}}}
 
 """"""""""
 " Private:
