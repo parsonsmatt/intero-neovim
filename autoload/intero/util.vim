@@ -5,19 +5,19 @@
 " don't fit specifically in any one.
 """""""""
 
-function! intero#util#stack_opts()
+function! intero#util#stack_opts() abort
     return '--stack-yaml ' . g:intero_stack_yaml
 endfunction
 
-function! intero#util#get_intero_window()
+function! intero#util#get_intero_window() abort
     " Returns the window ID that the Intero process is on, or -1 if it isn't
     " found.
     return bufwinnr('stack ' .  intero#util#stack_opts() . ' ghci --with-ghc intero')
 endfunction
 
-function! intero#util#make_command(cmd)
-    let info = intero#loc#get_identifier_information()
-    return join([a:cmd, info.module, info.line, info.beg_col, info.line, info.end_col, info.identifier], ' ')
+function! intero#util#make_command(cmd) abort
+    let l:info = intero#loc#get_identifier_information()
+    return join([a:cmd, l:info.module, l:info.line, l:info.beg_col, l:info.line, l:info.end_col, l:info.identifier], ' ')
 endfunction
 
 """"""""""
@@ -25,30 +25,30 @@ endfunction
 """"""""""
 "
 " Return the current haskell identifier
-function! intero#util#get_haskell_identifier()
-    let c = col ('.')-1
-    let l = line('.')
-    let ll = getline(l)
-    let ll1 = strpart(ll,0,c)
-    let ll1 = matchstr(ll1,"[a-zA-Z0-9_'.]*$")
-    let ll2 = strpart(ll,c,strlen(ll)-c+1)
-    let ll2 = matchstr(ll2,"^[a-zA-Z0-9_'.]*")
-    return ll1.ll2
+function! intero#util#get_haskell_identifier() abort
+    let l:c = col ('.') - 1
+    let l:l = line('.')
+    let l:ll = getline(l:l)
+    let l:ll1 = strpart(l:ll, 0, l:c)
+    let l:ll1 = matchstr(l:ll1, "[a-zA-Z0-9_'.]*$")
+    let l:ll2 = strpart(l:ll, l:c, strlen(l:ll) - l:c + 1)
+    let l:ll2 = matchstr(l:ll2, "^[a-zA-Z0-9_'.]*")
+    return l:ll1 . l:ll2
 endfunction "}}}
 
-function! intero#util#print_warning(msg) "{{{
+function! intero#util#print_warning(msg) abort "{{{
     echohl WarningMsg
     echomsg a:msg
     echohl None
 endfunction "}}}
 
-function! intero#util#print_error(msg) "{{{
+function! intero#util#print_error(msg) abort "{{{
     echohl ErrorMsg
     echomsg a:msg
     echohl None
 endfunction "}}}
 
-function! intero#util#getcol() "{{{
+function! intero#util#getcol() abort "{{{
     let l:line = line('.')
     let l:col = col('.')
     let l:str = getline(l:line)[:(l:col - 1)]
@@ -56,7 +56,7 @@ function! intero#util#getcol() "{{{
     return l:col + 7 * l:tabcnt
 endfunction "}}}
 
-function! intero#util#tocol(line, col) "{{{
+function! intero#util#tocol(line, col) abort "{{{
     let l:str = getline(a:line)
     let l:len = len(l:str)
     let l:col = 0

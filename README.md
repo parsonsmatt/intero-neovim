@@ -1,4 +1,5 @@
 # `intero-neovim` : v1.0.0
+[![Build Status](https://travis-ci.org/parsonsmatt/intero-neovim.svg?branch=master)](https://travis-ci.org/parsonsmatt/intero-neovim)
 
 Get the lightning fast type information and go-to-definition that Intero
 provides without going to the dark side of emacs!

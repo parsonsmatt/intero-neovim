@@ -21,35 +21,35 @@ let g:intero_echo_next = 0
 " only the first will be run, after which it will be dropped from the queue.
 let s:response_handlers = []
 
-function! intero#process#ensure_installed()
+function! intero#process#ensure_installed() abort
     " This function ensures that intero is installed. If `stack` exits with a
     " non-0 exit code, that means it failed to find the executable.
     "
     " TODO: Verify that we have a version of intero that the plugin can work
     " with.
     if (!executable('stack'))
-        echom "Stack is required for Intero."
+        echom 'Stack is required for Intero.'
     endif
 
     " We haven't set the stack-root yet, so we shouldn't be able to find this yet.
     if (executable('intero'))
-        echom "Intero is installed in your PATH, which may cause problems when using different resolvers."
-        echom "This usually happens if you run `stack install intero` instead of `stack build intero`."
+        echom 'Intero is installed in your PATH, which may cause problems when using different resolvers.'
+        echom 'This usually happens if you run `stack install intero` instead of `stack build intero`.'
     endif
 
     " Find stack.yaml
-    if (!exists("g:intero_stack_yaml"))
+    if (!exists('g:intero_stack_yaml'))
         " Change dir temporarily and see if stack can find a config
         silent! lcd %:p:h
         let g:intero_stack_yaml = systemlist('stack path --config-location')[-1]
         silent! lcd -
     endif
 
-    if(!exists("g:intero_built"))
+    if(!exists('g:intero_built'))
         let l:version = system('stack ' . intero#util#stack_opts() . ' exec --verbosity silent -- intero --version')
         if v:shell_error
             let g:intero_built = 0
-            echom "Intero not installed."
+            echom 'Intero not installed.'
             let l:opts = { 'on_exit': function('s:build_complete') }
             call s:start_compile(10, l:opts)
         else
@@ -59,11 +59,11 @@ function! intero#process#ensure_installed()
     endif
 endfunction
 
-function! intero#process#start()
+function! intero#process#start() abort
     " Starts an intero terminal buffer, initially only occupying a small area.
     " Returns the intero buffer id.
     if(!exists('g:intero_built') || g:intero_built == 0)
-        echom "Intero is still compiling"
+        echom 'Intero is still compiling'
         return
     endif
 
@@ -81,22 +81,22 @@ function! intero#process#start()
     return g:intero_buffer_id
 endfunction
 
-function! intero#process#kill()
+function! intero#process#kill() abort
     " Kills the intero buffer, if it exists.
     if exists('g:intero_buffer_id')
         exe 'bd! ' . g:intero_buffer_id
         unlet g:intero_buffer_id
     else
-        echo "No Intero process loaded."
+        echo 'No Intero process loaded.'
     endif
 endfunction
 
-function! intero#process#hide()
+function! intero#process#hide() abort
     " Hides the current buffer without killing the process.
     silent! call s:hide_buffer()
 endfunction
 
-function! intero#process#open()
+function! intero#process#open() abort
     " Opens the Intero REPL. If the REPL isn't currently running, then this
     " creates it. If the REPL is already running, this is a noop. Returns the
     " window ID.
@@ -115,7 +115,7 @@ function! intero#process#open()
     endif
 endfunction
 
-function! intero#process#add_handler(func)
+function! intero#process#add_handler(func) abort
     " Adds an event handler to the queue
     let s:response_handlers = s:response_handlers + [a:func]
 endfunction
@@ -124,7 +124,7 @@ endfunction
 " Private:
 """"""""""
 
-function! s:start_compile(height, opts)
+function! s:start_compile(height, opts) abort
     " Starts an Intero compiling in a split below the current buffer.
     " Returns the ID of the buffer.
     exe 'below ' . a:height . ' split'
@@ -142,7 +142,7 @@ function! s:start_compile(height, opts)
     return l:buffer_id
 endfunction
 
-function! s:start_buffer(height)
+function! s:start_buffer(height) abort
     " Starts an Intero REPL in a split below the current buffer. Returns the
     " ID of the buffer.
     exe 'below ' . a:height . ' split'
@@ -165,7 +165,7 @@ function! s:start_buffer(height)
     return l:buffer_id
 endfunction
 
-function! s:on_stdout(jobid, lines, event)
+function! s:on_stdout(jobid, lines, event) abort
     " Initialise regex handling code
     " Using Python because raw strings make this much easier to read
     if !exists('s:ansi_re_init')
@@ -195,11 +195,11 @@ EOF
         let g:intero_prompt_regex = '[^-]> $'
     endif
 
-    for line_seg in a:lines
+    for l:line_seg in a:lines
         let s:current_line = s:current_line . l:line_seg
 
         " If we've found a newline, flush the line buffer
-        if s:current_line =~ '\r$'
+        if s:current_line =~# '\r$'
             " Remove trailing newline, control chars
             let s:current_line = substitute(s:current_line, '\r$', '', '')
             let s:current_line = pyeval('strip_ansi()')
@@ -222,7 +222,7 @@ EOF
     endfor
 endfunction
 
-function! s:new_response(response)
+function! s:new_response(response) abort
     " This means that Intero is now available to run commands
     " TODO: ignore commands until this is set
     if !g:intero_started
@@ -245,13 +245,13 @@ function! s:new_response(response)
     endif
 endfunction
 
-function! s:open_window(height)
+function! s:open_window(height) abort
     " Opens a window of a:height and moves it to the very bottom.
     exe 'below ' . a:height . ' split'
     normal! <C-w>J
 endfunction
 
-function! s:hide_buffer()
+function! s:hide_buffer() abort
     " This closes the Intero REPL buffer without killing the process.
     let l:window_number = intero#util#get_intero_window()
     if l:window_number > 0
@@ -260,12 +260,12 @@ function! s:hide_buffer()
 endfunction
 
 function! s:build_complete(job_id, data, event) abort
-    if(a:event == 'exit')
+    if(a:event ==# 'exit')
         if(a:data == 0)
             let g:intero_built = 1
             call intero#process#start()
         else
-            echom "Intero failed to compile."
+            echom 'Intero failed to compile.'
         endif
     endif
 endfunction
