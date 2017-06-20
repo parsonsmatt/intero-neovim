@@ -3,3 +3,5 @@ vimproc
 tinytest
 verbose.log
 stdout.log
+*.pyc
+

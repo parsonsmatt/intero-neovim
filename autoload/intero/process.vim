@@ -21,31 +21,34 @@ let g:intero_echo_next = 0
 " only the first will be run, after which it will be dropped from the queue.
 let s:response_handlers = []
 
-function! intero#process#ensure_installed() abort
-    " This function ensures that intero is installed. If `stack` exits with a
-    " non-0 exit code, that means it failed to find the executable.
-    "
-    " TODO: Verify that we have a version of intero that the plugin can work
-    " with.
-    if (!executable('stack'))
-        echom 'Stack is required for Intero.'
-    endif
-
-    " We haven't set the stack-root yet, so we shouldn't be able to find this yet.
-    if (executable('intero'))
-        echom 'Intero is installed in your PATH, which may cause problems when using different resolvers.'
-        echom 'This usually happens if you run `stack install intero` instead of `stack build intero`.'
-    endif
-
-    " Find stack.yaml
-    if (!exists('g:intero_stack_yaml'))
-        " Change dir temporarily and see if stack can find a config
-        silent! lcd %:p:h
-        let g:intero_stack_yaml = systemlist('stack path --config-location')[-1]
-        silent! lcd -
-    endif
+function! intero#process#initialize() abort
+    " This is the entry point. It ensures that Intero is installed, sets any
+    " global state we need, and starts it.
 
     if(!exists('g:intero_built'))
+        " If `stack` exits with a non-0 exit code, that means it failed to find the executable.
+        if (!executable('stack'))
+            echom 'Stack is required for Intero.'
+            return
+        endif
+
+        " We haven't set the stack-root yet, so we shouldn't be able to find this yet.
+        if (executable('intero'))
+            echom 'Intero is installed in your PATH, which may cause problems when using different resolvers.'
+            echom 'This usually happens if you run `stack install intero` instead of `stack build intero`.'
+            return
+        endif
+
+        " Find stack.yaml
+        if (!exists('g:intero_stack_yaml'))
+            " Change dir temporarily and see if stack can find a config
+            silent! lcd %:p:h
+            let g:intero_stack_yaml = systemlist('stack path --config-location')[-1]
+            silent! lcd -
+        endif
+
+        " Either start Intero, or start compiling it.
+        " TODO: Verify that we have a version of intero that the plugin can work with.
         let l:version = system('stack ' . intero#util#stack_opts() . ' exec --verbosity silent -- intero --version')
         if v:shell_error
             let g:intero_built = 0
@@ -148,11 +151,9 @@ function! s:start_buffer(height) abort
     exe 'below ' . a:height . ' split'
 
     enew
-    py import os.path
-    let l:stack_dir = pyeval('os.path.dirname("' . g:intero_stack_yaml . '")')
     call termopen('stack ' . intero#util#stack_opts() . ' ghci --with-ghc intero', {
                 \ 'on_stdout': function('s:on_stdout'),
-                \ 'cwd': l:stack_dir
+                \ 'cwd': pyeval('intero.stack_dirname()')
                 \ })
 
     set bufhidden=hide
@@ -166,31 +167,6 @@ function! s:start_buffer(height) abort
 endfunction
 
 function! s:on_stdout(jobid, lines, event) abort
-    " Initialise regex handling code
-    " Using Python because raw strings make this much easier to read
-    if !exists('s:ansi_re_init')
-        python << EOF
-import re
-regexes = [
-    # Filter out ANSI codes - they are needed for interactive use, but we don't care about them.
-    # Regex from: https://stackoverflow.com/questions/14693701/how-can-i-remove-the-ansi-escape-sequences-from-a-string-in-python
-    # Note that we replace [0-?] with [0-Z] to filter out the arrow keys as well (xterm codes)
-    re.compile(r"(\x9B|\x1B\[)[0-Z]*[ -\/]*[@-~]"),
-    # Filter out DECPAM/DECPNM, since they're emitted as well
-    # Source: https://www.xfree86.org/4.8.0/ctlseqs.html
-    re.compile(r"\x1B[>=]")
-    ]
-def strip_ansi():
-    current_line = vim.eval('s:current_line')
-
-    for r in regexes:
-        current_line = r.sub("", current_line)
-
-    return current_line
-EOF
-        let s:ansi_re_init = 1
-    endif
-
     if !exists('g:intero_prompt_regex')
         let g:intero_prompt_regex = '[^-]> $'
     endif
@@ -202,7 +178,7 @@ EOF
         if s:current_line =~# '\r$'
             " Remove trailing newline, control chars
             let s:current_line = substitute(s:current_line, '\r$', '', '')
-            let s:current_line = pyeval('strip_ansi()')
+            let s:current_line = pyeval('intero.strip_control_chars()')
 
             " Flush line buffer
             let s:current_response = s:current_response + [s:current_line]

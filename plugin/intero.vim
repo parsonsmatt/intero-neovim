@@ -30,5 +30,9 @@ command! -nargs=0 -bang InteroReload call intero#repl#reload()
 " Highlight uses of the identifier under cursor
 command! -nargs=0 -bang InteroUses call intero#repl#uses() | set hlsearch
 
+" Load Python code
+py import sys
+call pyeval('sys.path.append("' . expand('<sfile>:p:h:h') . '")')
+py import intero
 
 " vim: set ts=4 sw=4 et fdm=marker:
