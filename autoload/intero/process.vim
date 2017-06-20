@@ -28,28 +28,28 @@ function! intero#process#ensure_installed()
     " TODO: Verify that we have a version of intero that the plugin can work
     " with.
     if (!executable('stack'))
-        echom "Stack is required for Intero."
+        echom 'Stack is required for Intero.'
     endif
 
     " We haven't set the stack-root yet, so we shouldn't be able to find this yet.
     if (executable('intero'))
-        echom "Intero is installed in your PATH, which may cause problems when using different resolvers."
-        echom "This usually happens if you run `stack install intero` instead of `stack build intero`."
+        echom 'Intero is installed in your PATH, which may cause problems when using different resolvers.'
+        echom 'This usually happens if you run `stack install intero` instead of `stack build intero`.'
     endif
 
     " Find stack.yaml
-    if (!exists("g:intero_stack_yaml"))
+    if (!exists('g:intero_stack_yaml'))
         " Change dir temporarily and see if stack can find a config
         silent! lcd %:p:h
         let g:intero_stack_yaml = systemlist('stack path --config-location')[-1]
         silent! lcd -
     endif
 
-    if(!exists("g:intero_built"))
+    if(!exists('g:intero_built'))
         let l:version = system('stack ' . intero#util#stack_opts() . ' exec --verbosity silent -- intero --version')
         if v:shell_error
             let g:intero_built = 0
-            echom "Intero not installed."
+            echom 'Intero not installed.'
             let l:opts = { 'on_exit': function('s:build_complete') }
             call s:start_compile(10, l:opts)
         else
@@ -63,7 +63,7 @@ function! intero#process#start()
     " Starts an intero terminal buffer, initially only occupying a small area.
     " Returns the intero buffer id.
     if(!exists('g:intero_built') || g:intero_built == 0)
-        echom "Intero is still compiling"
+        echom 'Intero is still compiling'
         return
     endif
 
@@ -87,7 +87,7 @@ function! intero#process#kill()
         exe 'bd! ' . g:intero_buffer_id
         unlet g:intero_buffer_id
     else
-        echo "No Intero process loaded."
+        echo 'No Intero process loaded.'
     endif
 endfunction
 
@@ -265,7 +265,7 @@ function! s:build_complete(job_id, data, event) abort
             let g:intero_built = 1
             call intero#process#start()
         else
-            echom "Intero failed to compile."
+            echom 'Intero failed to compile.'
         endif
     endif
 endfunction

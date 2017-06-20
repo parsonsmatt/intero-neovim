@@ -9,12 +9,12 @@ function! intero#repl#eval(...)
     " evaluates it in the Intero REPL.
     if a:0 == 0
         call inputsave()
-        let l:eval = input("Command: ")
+        let l:eval = input('Command: ')
         call inputrestore()
     elseif a:0 == 1
         let l:eval = a:1
     else
-        echomsg "Call with nothing for eval or with command string."
+        echomsg 'Call with nothing for eval or with command string.'
         return
     endif
 
@@ -35,7 +35,7 @@ function! intero#repl#type(generic)
     if a:generic
         let l:identifier = intero#util#get_haskell_identifier()
     else
-        let l:identifier = "it"
+        let l:identifier = 'it'
     endif
 
     call intero#repl#eval(
@@ -50,7 +50,7 @@ endfunction
 function! intero#repl#send(str)
     " Sends a:str to the Intero REPL.
     if !exists('g:intero_buffer_id')
-        echomsg "Intero not running."
+        echomsg 'Intero not running.'
         return
     endif
     call jobsend(g:intero_job_id, add([a:str], ''))
@@ -68,7 +68,7 @@ endfunction
 function! intero#repl#uses()
     let info = intero#loc#get_identifier_information()
     call intero#repl#send(intero#util#make_command(':uses'))
-    exec "normal! /" . info.identifier . "\<CR>N"
+    exec 'normal! /' . info.identifier . "\<CR>N"
     set hlsearch
     let @/ = info.identifier
 endfunction
@@ -78,6 +78,6 @@ endfunction
 """"""""""
 
 function s:paste_type(response)
-    call append(line(".")-1, a:response)
+    call append(line('.')-1, a:response)
 endfunction
 
