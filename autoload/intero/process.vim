@@ -199,7 +199,7 @@ EOF
         let s:current_line = s:current_line . l:line_seg
 
         " If we've found a newline, flush the line buffer
-        if s:current_line =~ '\r$'
+        if s:current_line =~# '\r$'
             " Remove trailing newline, control chars
             let s:current_line = substitute(s:current_line, '\r$', '', '')
             let s:current_line = pyeval('strip_ansi()')
@@ -260,7 +260,7 @@ function! s:hide_buffer() abort
 endfunction
 
 function! s:build_complete(job_id, data, event) abort
-    if(a:event == 'exit')
+    if(a:event ==# 'exit')
         if(a:data == 0)
             let g:intero_built = 1
             call intero#process#start()

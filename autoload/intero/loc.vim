@@ -40,7 +40,7 @@ function! s:handle_loc(resp) abort
     let l:pack_or_path = l:split[0]
     let l:module_or_loc = l:split[1]
 
-    if l:module_or_loc =~ '[\h\+\.\?]\+'
+    if l:module_or_loc =~# '[\h\+\.\?]\+'
         echom l:response
     else
         let l:loc_split = split(l:module_or_loc, '-')
