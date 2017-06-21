@@ -8,6 +8,8 @@ provides without going to the dark side of emacs!
 
 This plugin is compatible with `pathogen`, `vim-plug`, etc.
 
+Intero will be automatically compiled via Stack the first time you open a project.
+
 ![Demo of Installation](demo-install-lo.gif)
 
 ## Usage
@@ -108,10 +110,12 @@ or `g:intero_stack_yaml` before invoking a command.
 
 If you use a custom prompt in GHCi, then you may need to modify the regex for it. The default is
 
-    let g:Intero_prompt_regex = '[^-]> $'
+    let g:Intero_prompt_regex = '[^-]> '
+
+## Neomake Integration
+This plugin uses [Neomake](https://github.com/neomake/neomake) for compilation error reporting. Note that running `:Neomake!` directly will *not* work, due to a limitation of Neomake - you need to run `:InteroReload` instead. (See #18 for details.)
 
 ## Completion
-
 Completion is not handled by this plugin. Check out [neco-ghc][] for fast
 autocompletion using `deoplete` or `omnicomplete`. If you have good reason for
 wanting Intero-provided completion, please [post in the related

@@ -30,9 +30,22 @@ command! -nargs=0 -bang InteroReload call intero#repl#reload()
 " Highlight uses of the identifier under cursor
 command! -nargs=0 -bang InteroUses call intero#repl#uses() | set hlsearch
 
-" Load Python code
-py import sys
-call pyeval('sys.path.append("' . expand('<sfile>:p:h:h') . '")')
-py import intero
+" Neomake integration
+let g:neomake_intero_maker = {
+        \ 'exe': 'cat',
+        \ 'args': [intero#maker#get_log_file()],
+        \ 'errorformat':
+            \ '%-G%\s%#,' .
+            \ '%f:%l:%c:%trror: %m,' .
+            \ '%f:%l:%c:%tarning: %m,'.
+            \ '%f:%l:%c: %trror: %m,' .
+            \ '%f:%l:%c: %tarning: %m,' .
+            \ '%E%f:%l:%c:%m,' .
+            \ '%E%f:%l:%c:,' .
+            \ '%Z%m'
+    \ }
+
+" Store the path to the plugin directory, so we can lazily load the Python module
+let g:intero_plugin_root = expand('<sfile>:p:h:h')
 
 " vim: set ts=4 sw=4 et fdm=marker:
