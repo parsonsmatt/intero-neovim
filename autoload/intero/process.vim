@@ -28,7 +28,7 @@ function! intero#process#initialize() abort
     if(!exists('g:intero_built'))
         " If `stack` exits with a non-0 exit code, that means it failed to find the executable.
         if (!executable('stack'))
-            echom 'Stack is required for Intero.'
+            echom 'Stack is required for Intero. Aborting.'
             return
         endif
 
@@ -36,7 +36,12 @@ function! intero#process#initialize() abort
         if (executable('intero'))
             echom 'Intero is installed in your PATH, which may cause problems when using different resolvers.'
             echom 'This usually happens if you run `stack install intero` instead of `stack build intero`.'
+            echom 'Aborting.'
             return
+        endif
+
+        if !exists(':Neomake')
+            echom 'Neomake not detected. Flychecking will be disabled.'
         endif
 
         " Load Python code
@@ -78,6 +83,7 @@ function! intero#process#start() abort
     if !exists('g:intero_buffer_id')
         let g:intero_buffer_id = s:start_buffer(10)
     endif
+
     augroup close_intero
         autocmd!
         autocmd VimLeave * call intero#repl#eval(":quit")
@@ -86,6 +92,7 @@ function! intero#process#start() abort
         autocmd VimLeavePre * call jobstop(g:intero_job_id)
         autocmd VimLeave * call jobstop(g:intero_job_id)
     augroup END
+
     return g:intero_buffer_id
 endfunction
 
@@ -205,19 +212,28 @@ function! s:on_stdout(jobid, lines, event) abort
 endfunction
 
 function! s:new_response(cmd, response) abort
+    let l:initial_compile = 0
+
     " This means that Intero is now available to run commands
     " TODO: ignore commands until this is set
     if !g:intero_started
         echom 'Intero ready'
         let g:intero_started = 1
+        let l:initial_compile = 1
     endif
 
     " For debugging
     let g:intero_response = a:response
 
+    " These handlers are used for all events
     if g:intero_echo_next
         echo join(a:response, "\n")
         let g:intero_echo_next = 0
+    endif
+
+    if(l:initial_compile || a:cmd =~# ':reload')
+        " Trigger Neomake's parsing of the compilation errors
+        call intero#maker#write_update(a:response)
     endif
 
     " If a handler has been registered, pop it and run it

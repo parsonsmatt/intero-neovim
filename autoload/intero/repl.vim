@@ -62,7 +62,10 @@ function! intero#repl#insert_type() abort
 endfunction
 
 function! intero#repl#reload() abort
-    call intero#repl#send(':r')
+    " Truncate file, so that we don't show stale results while recompiling
+    call intero#maker#write_update([])
+
+    call intero#repl#send(':reload')
 endfunction
 
 function! intero#repl#uses() abort
