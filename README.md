@@ -108,7 +108,7 @@ or `g:intero_stack_yaml` before invoking a command.
 
 If you use a custom prompt in GHCi, then you may need to modify the regex for it. The default is
 
-    let g:Intero_prompt_regex = '[^-]> $'
+    let g:Intero_prompt_regex = '[^-]> '
 
 ## Completion
 

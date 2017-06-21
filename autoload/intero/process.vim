@@ -173,7 +173,7 @@ endfunction
 
 function! s:on_stdout(jobid, lines, event) abort
     if !exists('g:intero_prompt_regex')
-        let g:intero_prompt_regex = '[^-]> $'
+        let g:intero_prompt_regex = '[^-]> '
     endif
 
     for l:line_seg in a:lines
@@ -191,10 +191,11 @@ function! s:on_stdout(jobid, lines, event) abort
         endif
 
         " If the current line is a prompt, we just completed a response
-        if s:current_line =~ g:intero_prompt_regex
+        if s:current_line =~ (g:intero_prompt_regex . '$')
             if len(s:current_response) > 0
-                " The first line is the input command, so we discard it
-                call s:new_response(s:current_response[1:])
+                " Separate the input command from the response
+                let l:cmd = substitute(s:current_response[0], '.*' . g:intero_prompt_regex, '', '')
+                call s:new_response(l:cmd, s:current_response[1:])
             endif
 
             let s:current_response = []
@@ -203,7 +204,7 @@ function! s:on_stdout(jobid, lines, event) abort
     endfor
 endfunction
 
-function! s:new_response(response) abort
+function! s:new_response(cmd, response) abort
     " This means that Intero is now available to run commands
     " TODO: ignore commands until this is set
     if !g:intero_started
