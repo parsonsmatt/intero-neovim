@@ -39,6 +39,11 @@ function! intero#process#initialize() abort
             return
         endif
 
+        " Load Python code
+        py import sys
+        call pyeval('sys.path.append("' . g:intero_plugin_root . '")')
+        py import intero
+
         " Find stack.yaml
         if (!exists('g:intero_stack_yaml'))
             " Change dir temporarily and see if stack can find a config
