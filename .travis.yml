@@ -1,7 +1,8 @@
 language: python
 install:
-    - pip install vim-vint
+    - pip install vim-vint flake8
 
 script:
     - vint --enable-neovim --style-problem .
+    - flake8 --max-line-length=150 --ignore=W391
 
