@@ -91,6 +91,7 @@ function! intero#process#start() abort
         autocmd VimLeave * InteroKill
         autocmd VimLeavePre * call jobstop(g:intero_job_id)
         autocmd VimLeave * call jobstop(g:intero_job_id)
+        autocmd VimLeave * call intero#maker#cleanup()
     augroup END
 
     return g:intero_buffer_id

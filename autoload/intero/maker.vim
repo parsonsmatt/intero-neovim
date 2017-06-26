@@ -5,10 +5,9 @@
 """"""""""
 
 " This is where we store the build log for consumption by Neomake.
-" The path is relative the working directory, which should be the project
-" root. This needs to be statically defined, since we set the maker on
-" startup.
-let s:log_file = '.stack-work/logs/intero-build.log'
+" We can't assume .stack-work exists, because of Stack scripts, and we need
+" this to be different for each running instance.
+let s:log_file = tempname()
 
 function! intero#maker#get_log_file() abort
     " Getter for log file path
@@ -19,9 +18,14 @@ endfunction
 function! intero#maker#write_update(lines) abort
     " Writes the specified lines to the log file, then notifies Neomake
 
-    call writefile(a:lines, '.stack-work/logs/intero-build.log')
+    call writefile(a:lines, s:log_file)
 
     if exists(':NeomakeProject')
         NeomakeProject intero
     endif
 endfunction
+
+function! intero#maker#cleanup() abort
+    call system('rm -f ' . s:log_file)
+endfunction
+
