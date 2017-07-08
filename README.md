@@ -23,6 +23,7 @@ nnoremap <Leader>hio :InteroOpen<CR>
 nnoremap <Leader>hik :InteroKill<CR>
 nnoremap <Leader>hic :InteroHide<CR>
 nnoremap <Leader>hil :InteroLoadCurrentModule<CR>
+nnoremap <Leader>hif :InteroLoadCurrentFile<CR>
 
 " REPL commands
 nnoremap <Leader>hie :InteroEval<CR>
@@ -85,6 +86,10 @@ Issues a `:r` to the REPL, causing it to reload the current module set.
 ### `InteroLoadCurrentModule`
 
 This loads the current module.
+
+### `InteroLoadCurrentFile`
+
+This loads the current file. Useful for working with stack's global project.
 
 ### `InteroOpen`
 
