@@ -20,7 +20,7 @@ function! intero#maker#write_update(lines) abort
 
     call writefile(a:lines, s:log_file)
 
-    if exists(':NeomakeProject')
+    if g:intero_use_neomake && exists(':NeomakeProject')
         NeomakeProject intero
     endif
 endfunction

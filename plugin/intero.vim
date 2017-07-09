@@ -3,6 +3,10 @@ if exists('g:did_plugin_intero') && g:did_plugin_intero
 endif
 let g:did_plugin_intero = 1
 
+if !exists('g:intero_use_neomake')
+    let g:intero_use_neomake = 1
+endif
+
 " Starts the Intero process in the background.
 command! -nargs=0 -bang InteroStart call intero#process#start()
 " Kills the Intero process.
@@ -32,20 +36,22 @@ command! -nargs=0 -bang InteroReload call intero#repl#reload()
 " Highlight uses of the identifier under cursor
 command! -nargs=0 -bang InteroUses call intero#repl#uses() | set hlsearch
 
-" Neomake integration
-let g:neomake_intero_maker = {
-        \ 'exe': 'cat',
-        \ 'args': [intero#maker#get_log_file()],
-        \ 'errorformat':
-            \ '%-G%\s%#,' .
-            \ '%f:%l:%c:%trror: %m,' .
-            \ '%f:%l:%c:%tarning: %m,'.
-            \ '%f:%l:%c: %trror: %m,' .
-            \ '%f:%l:%c: %tarning: %m,' .
-            \ '%E%f:%l:%c:%m,' .
-            \ '%E%f:%l:%c:,' .
-            \ '%Z%m'
-    \ }
+if g:intero_use_neomake
+    " Neomake integration
+    let g:neomake_intero_maker = {
+            \ 'exe': 'cat',
+            \ 'args': [intero#maker#get_log_file()],
+            \ 'errorformat':
+                \ '%-G%\s%#,' .
+                \ '%f:%l:%c:%trror: %m,' .
+                \ '%f:%l:%c:%tarning: %m,'.
+                \ '%f:%l:%c: %trror: %m,' .
+                \ '%f:%l:%c: %tarning: %m,' .
+                \ '%E%f:%l:%c:%m,' .
+                \ '%E%f:%l:%c:,' .
+                \ '%Z%m'
+        \ }
+endif
 
 " Store the path to the plugin directory, so we can lazily load the Python module
 let g:intero_plugin_root = expand('<sfile>:p:h:h')

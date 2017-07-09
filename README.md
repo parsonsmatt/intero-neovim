@@ -54,6 +54,18 @@ Intero needs to start a long-running GHCi process to work. By default, we start
 this whenever a Haskell buffer is opened. Setting this option to `0` defers
 starting GHCi until you run `:InteroStart` or `:InteroOpen`.
 
+### `g:intero_use_neomake`
+
+Default: 1.
+
+Neomake can detect and use Neomake to asynchronously show errors and warnings in
+the sign column. To disable using Neomake completely, set this option to `0`.
+For example, you might want this if you plan on using `intero` in conjunction
+with a plugin like [ALE](https://github.com/w0rp/ale) or
+[Syntastic](https://github.com/vim-syntastic/syntastic).
+
+Note: if you don't have Neomake, we detect that appropriately and continue
+gracefully.
 
 ## Commands
 

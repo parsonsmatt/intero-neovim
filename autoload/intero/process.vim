@@ -45,7 +45,7 @@ function! intero#process#initialize() abort
             return
         endif
 
-        if !exists(':Neomake')
+        if g:intero_use_neomake && !exists(':Neomake')
             echom 'Neomake not detected. Flychecking will be disabled.'
         endif
 
