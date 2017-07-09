@@ -44,6 +44,17 @@ autocmd! BufWritePost *.hs InteroReload
 
 ![REPL demo](demo-repl-lo.gif)
 
+## Configuration
+
+### `g:intero_start_immediately`
+
+Default: 1.
+
+Intero needs to start a long-running GHCi process to work. By default, we start
+this whenever a Haskell buffer is opened. Setting this option to `0` defers
+starting GHCi until you run `:InteroStart` or `:InteroOpen`.
+
+
 ## Commands
 
 The following commands are available:

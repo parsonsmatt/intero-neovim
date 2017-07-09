@@ -5,6 +5,11 @@
 " includes ensuring that Intero is installed, starting/killing the
 " process, and hiding/showing the REPL.
 """""""""""
+
+if !exists('g:intero_start_immediately')
+    let g:intero_start_immediately = 1
+endif
+
 " Lines of output consistuting of a command and the response to it
 let s:current_response = []
 
@@ -67,7 +72,9 @@ function! intero#process#initialize() abort
             call s:start_compile(10, l:opts)
         else
             let g:intero_built = 1
-            call intero#process#start()
+            if g:intero_start_immediately
+                call intero#process#start()
+            endif
         endif
     endif
 endfunction
