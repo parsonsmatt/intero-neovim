@@ -13,6 +13,8 @@ command! -nargs=0 -bang InteroOpen call intero#process#open()
 command! -nargs=0 -bang InteroHide call intero#process#hide()
 " Loads the current module in Intero.
 command! -nargs=0 -bang InteroLoadCurrentModule call intero#repl#load_current_module()
+" Loads the current file in Intero.
+command! -nargs=0 -bang InteroLoadCurrentFile call intero#repl#load_current_file()
 " Prompts user for a string to eval
 command! -nargs=0 -bang InteroEval call intero#repl#eval()
 " Gets the specific type at the current point

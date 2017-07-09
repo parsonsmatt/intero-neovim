@@ -27,6 +27,11 @@ function! intero#repl#load_current_module() abort
     call intero#repl#eval(':l ' . intero#loc#detect_module())
 endfunction
 
+function! intero#repl#load_current_file() abort
+    " Load the current file (useful for using the stack global project)
+    call intero#repl#eval(':l ' . expand('%:p'))
+endfunction
+
 function! intero#repl#type(generic) abort
     " Gets the type at the current point.
     let l:line = line('.')
