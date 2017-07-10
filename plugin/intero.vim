@@ -31,6 +31,8 @@ command! -nargs=0 -bang InteroTypeInsert call intero#repl#insert_type()
 command! -nargs=0 -bang InteroReload call intero#repl#reload()
 " Highlight uses of the identifier under cursor
 command! -nargs=0 -bang InteroUses call intero#repl#uses() | set hlsearch
+" Kill and restart the Intero process with the given targets.
+command! -nargs=* -bang InteroRestartWith call intero#process#restart_with(<f-args>)
 
 " Neomake integration
 let g:neomake_intero_maker = {

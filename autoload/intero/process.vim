@@ -136,6 +136,20 @@ function! intero#process#add_handler(func) abort
     let s:response_handlers = s:response_handlers + [a:func]
 endfunction
 
+function! intero#process#restart_with(...) abort
+    " If no arguments were passed, use the current value of intero load
+    " targets
+    if a:0 == 0
+        call intero#process#kill()
+        call intero#process#start()
+        return
+    endif
+
+    call intero#util#set_load_targets(a:000)
+    call intero#process#kill()
+    call intero#process#start()
+endfunction
+
 """"""""""
 " Private:
 """"""""""
@@ -164,7 +178,10 @@ function! s:start_buffer(height) abort
     exe 'below ' . a:height . ' split'
 
     enew
-    call termopen('stack ' . intero#util#stack_opts() . ' ghci --with-ghc intero', {
+    call termopen('stack ' 
+        \ . intero#util#stack_opts() 
+        \ . ' ghci --with-ghc intero '
+        \ . intero#util#stack_build_opts(), {
                 \ 'on_stdout': function('s:on_stdout'),
                 \ 'cwd': pyeval('intero.stack_dirname()')
                 \ })
@@ -268,12 +285,3 @@ function! s:build_complete(job_id, data, event) abort
         endif
     endif
 endfunction
-
-function! s:load_targets_from_stack() abort
-    let g:intero_load_targets = systemlist('stack ide targets')
-endfunction
-
-if (!exists('g:intero_load_targets'))
-    " A list of load targets.
-    call s:load_targets_from_stack()
-endif

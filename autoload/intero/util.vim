@@ -9,6 +9,10 @@ function! intero#util#stack_opts() abort
     return '--stack-yaml ' . g:intero_stack_yaml
 endfunction
 
+function! intero#util#stack_build_opts() abort
+    return intero#util#load_targets_as_string()
+endfunction
+
 function! intero#util#get_intero_window() abort
     " Returns the window ID that the Intero process is on, or -1 if it isn't
     " found.
@@ -69,4 +73,33 @@ function! intero#util#tocol(line, col) abort "{{{
     return l:len + 1
 endfunction "}}}
 
+function! s:load_targets_from_stack() abort
+    return systemlist('stack ide targets')
+endfunction
+
+if (!exists('g:intero_load_targets'))
+    " A list of load targets.
+    let g:intero_load_targets = []
+endif
+
+" Attempt to set the load targets. When passed an empty array, this uses the
+" targets as given by `stack ide targets`.
+function! intero#util#set_load_targets(targets) abort
+    let l:stack_targets = s:load_targets_from_stack()
+    if len(a:targets) == 0
+        let g:intero_load_targets = l:stack_targets
+        return g:intero_load_targets
+    endif
+
+    let g:intero_load_targets = a:targets
+    return a:targets
+endfunction
+
+function! intero#util#get_load_targets()
+    return g:intero_load_targets
+endfunction
+
+function! intero#util#load_targets_as_string()
+    return join(intero#util#get_load_targets(), ' ')
+endfunction
 " vim: set ts=4 sw=4 et fdm=marker:
