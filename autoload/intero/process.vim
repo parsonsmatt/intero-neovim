@@ -6,10 +6,6 @@
 " process, and hiding/showing the REPL.
 """""""""""
 
-if !exists('g:intero_start_immediately')
-    let g:intero_start_immediately = 1
-endif
-
 " Lines of output consistuting of a command and the response to it
 let s:current_response = []
 
@@ -19,6 +15,9 @@ let s:current_line = ''
 " Whether Intero has finished starting yet
 let g:intero_started = 0
 
+" Whether Intero has done its initialization yet
+let s:intero_initialized = 0
+
 " If true, echo the next response. Reset after each response.
 let g:intero_echo_next = 0
 
@@ -27,8 +26,14 @@ let g:intero_echo_next = 0
 let s:response_handlers = []
 
 function! intero#process#initialize() abort
-    " This is the entry point. It ensures that Intero is installed, sets any
-    " global state we need, and starts it.
+    " This function initializes Intero.
+    " It sets any global states we need, builds 'intero' if needed, and emits
+    " any appropriate warnings to the user.
+
+    " We only need to initialize once
+    if s:intero_initialized
+        return
+    endif
 
     if(!exists('g:intero_built'))
         " If `stack` exits with a non-0 exit code, that means it failed to find the executable.
@@ -62,7 +67,7 @@ function! intero#process#initialize() abort
             silent! lcd -
         endif
 
-        " Either start Intero, or start compiling it.
+        " Ensure that intero is compiled
         " TODO: Verify that we have a version of intero that the plugin can work with.
         let l:version = system('stack ' . intero#util#stack_opts() . ' exec --verbosity silent -- intero --version')
         if v:shell_error
@@ -72,16 +77,19 @@ function! intero#process#initialize() abort
             call s:start_compile(10, l:opts)
         else
             let g:intero_built = 1
-            if g:intero_start_immediately
-                call intero#process#start()
-            endif
         endif
     endif
+
+    let s:intero_initialized = 1
 endfunction
 
 function! intero#process#start() abort
-    " Starts an intero terminal buffer, initially only occupying a small area.
+    " This is the entry point. It ensures that Intero is initialized, then
+    " starts an intero terminal buffer. Initially only occupies a small area.
     " Returns the intero buffer id.
+
+    call intero#process#initialize()
+
     if(!exists('g:intero_built') || g:intero_built == 0)
         echom 'Intero is still compiling'
         return
@@ -123,6 +131,8 @@ function! intero#process#open() abort
     " Opens the Intero REPL. If the REPL isn't currently running, then this
     " creates it. If the REPL is already running, this is a noop. Returns the
     " window ID.
+    call intero#process#initialize()
+
     let l:intero_win = intero#util#get_intero_window()
     if l:intero_win != -1
         return l:intero_win
@@ -259,6 +269,11 @@ endfunction
 
 function! s:hide_buffer() abort
     " This closes the Intero REPL buffer without killing the process.
+    if !s:intero_initialized
+        echom 'Intero was never started.'
+        return
+    endif
+
     let l:window_number = intero#util#get_intero_window()
     if l:window_number > 0
         exec 'silent! ' . l:window_number . 'wincmd c'
