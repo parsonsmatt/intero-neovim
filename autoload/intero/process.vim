@@ -269,3 +269,11 @@ function! s:build_complete(job_id, data, event) abort
     endif
 endfunction
 
+function! s:load_targets_from_stack() abort
+    let g:intero_load_targets = systemlist('stack ide targets')
+endfunction
+
+if (!exists('g:intero_load_targets'))
+    " A list of load targets.
+    call s:load_targets_from_stack()
+endif
