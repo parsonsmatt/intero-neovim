@@ -136,20 +136,14 @@ function! intero#process#add_handler(func) abort
     let s:response_handlers = s:response_handlers + [a:func]
 endfunction
 
-function! intero#process#restart_with(...) abort
-    " If no arguments were passed, prompt the user to enter a target
-    " targets
-    if a:0 == 0
-        call inputsave()
-        let l:targets = split(input('Targets: '), ' ')
-        call inputrestore()
-    else 
-        let l:targets = a:000
-    endif
-
-    call intero#util#set_load_targets(l:targets)
+function! intero#process#restart() abort
     call intero#process#kill()
     call intero#process#start()
+endfunction
+
+function! intero#process#restart_with_targets(...)
+    call intero#util#set_load_targets(a:000)
+    call intero#process#restart()
 endfunction
 
 """"""""""

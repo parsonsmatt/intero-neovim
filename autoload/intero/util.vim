@@ -98,17 +98,18 @@ function! intero#util#set_load_targets(targets) abort
         return g:intero_load_targets
     endif
 
+    let l:valid_targets = []
     " we are in a stack project, and there are desired targets. validate that
     " they are contained inside the stack load targets
-""    for target in a:targets
-""        if index(l:stack_targets, target) == -1
-""            call intero#util#print_warning("Target " . target . " not present in available Stack targets: " . join(l:stack_targets, ' '))
-""        endif
-""    endfor
+    for target in a:targets
+        if index(l:stack_targets, target) == -1
+            call intero#util#print_warning("Target " . target . " not present in available Stack targets: " . join(l:stack_targets, ' '))
+        else 
+            call add(l:valid_targets, target)
+        endif
+    endfor
 
-    call s:multiple_options(g:intero_load_targets, l:stack_targets)
-
-    let g:intero_load_targets = a:targets
+    let g:intero_load_targets = l:valid_targets
     return g:intero_load_targets
 endfunction
 
@@ -119,67 +120,4 @@ endfunction
 function! intero#util#load_targets_as_string()
     return join(intero#util#get_load_targets(), ' ')
 endfunction
-
-" The following bit of code is derived from an answer by user852573 from stack
-" overflow: https://stackoverflow.com/questions/45018608/how-to-prompt-a-user-for-multiple-entries-in-a-list/45020776#45020776
-
-function! s:multiple_options(current_opts, stack_opts) abort
-    vnew | exe 'vert resize '.(&columns/3)
-    setl bh=wipe bt=nofile nobl noswf nowrap
-    if !bufexists('Select Intero Targets') | silent file Select\ Intero\ Targets | endif
-
-    silent! 0put = a:stack_opts
-    silent! $d_
-    setl noma ro
-
-    let w:options_chosen = { 'lines': a:current_opts, 'pattern': '', 'id': 0 }
-    let w:options_chosen.pattern = '\v'.join(map(
-                                \               copy(w:options_chosen.lines),
-                                \               "'%'.v:val.'l'"
-                                \              ), '|')
-
-    let w:options_chosen.id = !empty(w:options_chosen.lines)
-                            \   ? matchadd('IncSearch', w:options_chosen.pattern)
-                            \   : 0
-
-    nno <silent> <buffer> <nowait> q     :<c-u>call <sid>close()<cr>
-    nno <silent> <buffer> <nowait> <cr>  :<c-u>call <sid>select_option()<cr>
-endfunction
-
-function! s:close() abort
-    let l:opts = s:load_targets_from_stack()
-    let g:intero_load_targets = map(w:options_chosen.lines, {k, v -> l:opts[v-1] })
-    close
-endfunction
-
-function! s:select_option() abort
-    if !exists('w:options_chosen')
-        let w:options_chosen = {
-                               \ 'lines'  : [],
-                               \ 'pattern' : '',
-                               \ 'id'      : 0,
-                               \ }
-    else
-        if w:options_chosen.id
-            call matchdelete(w:options_chosen.id)
-            let w:options_chosen.pattern .= '|'
-        endif
-    endif
-
-    if !empty(w:options_chosen.lines) && count(w:options_chosen.lines, line('.'))
-        call filter(w:options_chosen.lines, "v:val != line('.')")
-    else
-        let w:options_chosen.lines += [ line('.') ]
-    endif
-
-    let w:options_chosen.pattern = '\v'.join(map(
-                                \               copy(w:options_chosen.lines),
-                                \               "'%'.v:val.'l'"
-                                \              ), '|')
-
-    let w:options_chosen.id = !empty(w:options_chosen.lines)
-                            \   ? matchadd('IncSearch', w:options_chosen.pattern)
-                            \   : 0
-endfunction
-
 " vim: set ts=4 sw=4 et fdm=marker:
