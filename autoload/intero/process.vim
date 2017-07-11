@@ -141,7 +141,7 @@ function! intero#process#restart() abort
     call intero#process#start()
 endfunction
 
-function! intero#process#restart_with_targets(...)
+function! intero#process#restart_with_targets(...) abort
     call intero#util#set_load_targets(a:000)
     call intero#process#restart()
 endfunction

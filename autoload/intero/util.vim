@@ -101,11 +101,11 @@ function! intero#util#set_load_targets(targets) abort
     let l:valid_targets = []
     " we are in a stack project, and there are desired targets. validate that
     " they are contained inside the stack load targets
-    for target in a:targets
-        if index(l:stack_targets, target) == -1
-            call intero#util#print_warning("Target " . target . " not present in available Stack targets: " . join(l:stack_targets, ' '))
+    for l:target in a:targets
+        if index(l:stack_targets, l:target) == -1
+            call intero#util#print_warning("Target " . l:target . " not present in available Stack targets: " . join(l:stack_targets, ' '))
         else 
-            call add(l:valid_targets, target)
+            call add(l:valid_targets, l:target)
         endif
     endfor
 
@@ -113,11 +113,11 @@ function! intero#util#set_load_targets(targets) abort
     return g:intero_load_targets
 endfunction
 
-function! intero#util#get_load_targets()
+function! intero#util#get_load_targets() abort
     return g:intero_load_targets
 endfunction
 
-function! intero#util#load_targets_as_string()
+function! intero#util#load_targets_as_string() abort
     return join(intero#util#get_load_targets(), ' ')
 endfunction
 " vim: set ts=4 sw=4 et fdm=marker:
