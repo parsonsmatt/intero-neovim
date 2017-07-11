@@ -270,7 +270,7 @@ endfunction
 function! s:hide_buffer() abort
     " This closes the Intero REPL buffer without killing the process.
     if !s:intero_initialized
-        echom 'Intero was never started.'
+        " Intero was never started.
         return
     endif
 
