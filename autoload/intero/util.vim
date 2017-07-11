@@ -103,7 +103,7 @@ function! intero#util#set_load_targets(targets) abort
     " they are contained inside the stack load targets
     for l:target in a:targets
         if index(l:stack_targets, l:target) == -1
-            call intero#util#print_warning("Target " . l:target . " not present in available Stack targets: " . join(l:stack_targets, ' '))
+            call intero#util#print_warning('Target ' . l:target . ' not present in available Stack targets: ' . join(l:stack_targets, ' '))
         else 
             call add(l:valid_targets, l:target)
         endif
