@@ -136,6 +136,16 @@ function! intero#process#add_handler(func) abort
     let s:response_handlers = s:response_handlers + [a:func]
 endfunction
 
+function! intero#process#restart() abort
+    call intero#process#kill()
+    call intero#process#start()
+endfunction
+
+function! intero#process#restart_with_targets(...) abort
+    call intero#util#set_load_targets(a:000)
+    call intero#process#restart()
+endfunction
+
 """"""""""
 " Private:
 """"""""""
@@ -164,7 +174,10 @@ function! s:start_buffer(height) abort
     exe 'below ' . a:height . ' split'
 
     enew
-    call termopen('stack ' . intero#util#stack_opts() . ' ghci --with-ghc intero', {
+    call termopen('stack ' 
+        \ . intero#util#stack_opts() 
+        \ . ' ghci --with-ghc intero '
+        \ . intero#util#stack_build_opts(), {
                 \ 'on_stdout': function('s:on_stdout'),
                 \ 'cwd': pyeval('intero.stack_dirname()')
                 \ })
@@ -268,4 +281,3 @@ function! s:build_complete(job_id, data, event) abort
         endif
     endif
 endfunction
-
