@@ -157,6 +157,7 @@ function! s:start_compile(height, opts) abort
 
     enew!
     call termopen('stack ' . intero#util#stack_opts() . ' build intero', a:opts)
+    file Intero_compiling
 
     set bufhidden=hide
     set noswapfile
@@ -182,6 +183,7 @@ function! s:start_buffer(height) abort
                 \ 'cwd': pyeval('intero.stack_dirname()')
                 \ })
 
+    file Intero
     set bufhidden=hide
     set noswapfile
     set hidden
