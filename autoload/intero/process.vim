@@ -92,7 +92,7 @@ function! intero#process#start() abort
 
     if(!exists('g:intero_built') || g:intero_built == 0)
         echom 'Intero is still compiling'
-        return
+        return -1
     endif
 
     if !exists('g:intero_buffer_id')
@@ -143,7 +143,10 @@ function! intero#process#open() abort
         normal! G
         exe 'silent! ' . l:current_window . 'wincmd w'
     else
-        call intero#process#start()
+        let l:rc = intero#process#start()
+        if l:rc < 0
+            return
+        endif
         return intero#process#open()
     endif
 endfunction
