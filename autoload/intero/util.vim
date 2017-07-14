@@ -16,7 +16,7 @@ endfunction
 function! intero#util#get_intero_window() abort
     " Returns the window ID that the Intero process is on, or -1 if it isn't
     " found.
-    return bufwinnr('stack ' .  intero#util#stack_opts() . ' ghci --with-ghc intero')
+    return bufwinnr('Intero')
 endfunction
 
 function! intero#util#make_command(cmd) abort
