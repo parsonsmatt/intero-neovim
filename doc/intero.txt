@@ -1,0 +1,304 @@
+*intero.txt* Complete interactive program development for Haskell
+*intero* *intero-neovim*
+
+     _       _                                             _           ~
+    (_)_ __ | |_ ___ _ __ ___        _ __   ___  _____   _(_)_ __ ___  ~
+    | | '_ \| __/ _ \ '__/ _ \ _____| '_ \ / _ \/ _ \ \ / / | '_ ` _ \ ~
+    | | | | | ||  __/ | | (_) |_____| | | |  __/ (_) \ V /| | | | | | |~
+    |_|_| |_|\__\___|_|  \___/      |_| |_|\___|\___/ \_/ |_|_| |_| |_|~
+                                                                       ~
+
+=============================================================================
+CONTENTS                                                     *intero-contents*
+
+    1. FEATURES .............................. |intero-features|
+    2. OVERVIEW .............................. |intero-overview|
+    3. USAGE ................................. |intero-usage|
+      3.1 The intero Package ................. |intero-package|
+      3.2 Intero Background Process .......... |intero-backend|
+      3.3 The GHCi REPL Buffer ............... |intero-repl|
+      3.4 Loading Code ....................... |intero-load|
+      3.5 Inspecting Types ................... |intero-types|
+      3.6 Switching Targets .................. |intero-targets|
+    4. CONFIGURATION ......................... |intero-config|
+    5. CAVEATS ............................... |intero-caveats|
+    6. LICENSE ............................... |intero-license|
+    7. CREDITS ............................... |intero-credits|
+
+=============================================================================
+FEATURES                                                     *intero-features*
+
+For screenshots and images, see the homepage on GitHub:
+https://github.com/parsonsmatt/intero-neovim
+
+Designed for Stack~
+
+Intero requires Stack. If your project works with Stack, it almost definitely
+works with Intero.
+
+Automatic Setup~
+
+`intero-neovim` takes care of installing Intero into your Stack environment.
+The installation is local (not global!). This means that Intero is always
+current for each of your projects. The goal of Intero is to Just Work™.
+
+On-the-fly Typechecking~
+
+Intero reports errors and warnings as you work on your file using the Neomake
+plugin. Errors appear asynchronously, and don't block the UI.
+
+Built-in REPL~
+
+Work with your Haskell code directly in GHCi using Neovim |:terminal| buffers.
+Load your file and play around with top-level functions directly.
+
+Type Information~
+
+You can ask for type information of the identifier under your cursor. Intero
+makes an effort to remember type information even when the module no longer
+typechecks.
+
+Jump to Definition~
+
+After a module has been loaded by Intero, you can jump to the defintion of any
+identifiers within your package. If the identifier comes from a different
+package, Intero will tell you which package the identifier comes from.
+
+Easy Target Switching~
+
+Intero makes working with multiple stack targets simple. Jump between your app
+and test suite seamlessly.
+
+=============================================================================
+OVERVIEW                                                     *intero-overview*
+
+To open the REPL:                             |:InteroOpen|
+To load into the REPL:                        |:InteroLoadCurrentFile|
+To reload whatever's in the REPL:             |:InteroReload|
+To get the type of the current identifier:    |:InteroGenericType|
+To jump to a definition:                first |:InteroLoadCurrentFile|
+                                         then |:InteroGoToDef|.
+To switch targets:                            |:InteroSetTargets|
+
+=============================================================================
+USAGE                                                           *intero-usage*
+
+The goal of Intero is to Just Work™. Most of the hard work is done behind the
+scenes.
+
+
+The intero Package~
+                                                              *intero-package*
+`intero-neovim` works by using Stack to build the `intero` package into your
+local project. The installation is completely automated by the plugin; you
+never have to install the `intero` package yourself.
+
+Every time you open a Haskell file in a new Stack project, we'll run
+`stack build intero` for this LTS release and GHC version. Stack then caches
+the installation, so it's faster the next time you re-use the same LTS release
+and GHC version in a project.
+
+Note that due to Stack's global-project, one-off files which aren't managed by
+Stack will always re-use the same global `intero` build. This makes working
+with one-off files as painless as whole projects.
+
+Some people might want to control when (and whether) `intero` is built after
+opening a Haskell file. See |g:intero_start_immediately|.
+
+
+Intero Background Process~
+                                                              *intero-backend*
+`intero-neovim` maintains a GHCi process running in the background. This works
+using Neovim's asynchronous job control API (|job-control|).
+
+By default, the backend is started automatically when you open a Haskell
+buffer. Some people might want to control when (and whether) the background
+process is started. See |g:intero_start_immediately|.
+
+
+                                                              *:InteroStart*
+                                                              *:InteroKill*
+                                                              *:InteroRestart*
+:InteroStart      Commands for starting and stopping the background
+:InteroKill       process. You shouldn't need |:InteroStart| unless you
+:InteroRestart    have unset |g:intero_start_immediately|. In this case,
+                  |:InteroStart| will do all initialization checks, like
+                  building the `intero` package and starting the backend.
+
+                  These commands only manipulate the background process.
+                  To manipulate the GHCi REPL, see |intero-repl|.
+
+
+The GHCi REPL Buffer~
+                                                                 *intero-repl*
+Normally, the intero backend (GHCi) runs in the background. However, you can
+bring it to the foreground into a |:terminal| buffer. There, you can directly
+interact with the REPL.
+
+                                                                 *:InteroOpen*
+                                                                 *:InteroHide*
+:InteroOpen       |:InteroOpen| makes sure that the background process is
+:InteroHide       started (|intero-backend|), then shows the REPL in a split.
+
+                  |:InteroHide| hides the open REPL buffer. It remains running
+                  in the background. To kill the background process, see
+                  |:InteroKill|.
+
+                  By default, the REPL opens in a horizontal split. To instead
+                  use a vertical split use |CTRL-W_H| or |CTRL-W_L|. To move
+                  it to it's own tab: |CTRL-W_T|.
+
+                                                                 *:InteroUses*
+:InteroUses       Prompts you for a command, runs it in the background
+                  process, and displays the result. Useful when you don't want
+                  to have to open up the full REPL.
+
+
+Loading Code~
+                                                                 *intero-load*
+It's convenient to be able to load your file's or module's top-level bindings
+into the GHCi REPL so that you can play around. Additionally, some commands
+won't work until you've loaded the current file or module.
+
+                                                               *:InteroReload*
+:InteroReload     Issues a `:reload` to GHCi. This rebuilds your code, and
+                  you'll be able to see type checking and compilation errors.
+                  If you have Neomake installed, the errors will show up in
+                  the sign column and loclist.
+
+                  For local Stack projects, your Main module is loaded
+                  immediately. For the global Stack project, you need to run
+                  |:InteroLoadCurrentFile| first.
+
+                                                      *:InteroLoadCurrentFile*
+:InteroLoadCurrentFile
+                  Gets the current file and loads it into GHCi (using
+                  `:load`). Should work for both local and global Stack
+                  projects.
+
+                                                    *:InteroLoadCurrentModule*
+:InteroLoadCurrentModule
+                  `intero-neovim` tries to parse the module you're working on
+                  right now, then loads it into GHCi (using `:load`). This
+                  usually fails for the Stack global project. Use
+                  |:InteroLoadCurrentFile| instead.
+
+
+Inspecting Types~
+                                                                *intero-types*
+Intero is able to tell you the type of any identifier in your code.
+
+                                                          *:InteroGenericType*
+                                                          *:InteroType*
+:InteroGenericType
+:InteroType
+                  Shows you the type of the identifier under your cursor.
+                  |:InteroGenericType| shows you the fully-generic type
+                  (including type variables, etc.). |:InteroType| shows you the
+                  same, but with all type variables instantiated if possible.
+
+                                                           *:InteroTypeInsert*
+:InteroTypeInsert
+                  Looks up the type of the current identifier, and inserts it
+                  above the current line as an annotation. You may have to
+                  make sure to load the current module or file you're working
+                  with (see |intero-load|).
+
+
+Switching Targets~
+                                                              *intero-targets*
+Intero requires a target to work. When it first starts, it makes its best
+guess for which to load. You can switch between targets on the fly
+(|:InteroSetTargets|), or you can configure which target to use globally
+(|g:intero_load_targets|).
+
+                                                           *:InteroSetTargets*
+:InteroSetTargets {target} ..
+                  Restarts Intero and starts using the specified targets (can
+                  be more than one). Overwrites whatever was previously in
+                  |g:intero_load_targets|.
+
+
+Documentation Pending~
+
+- InteroUses
+- InteroInfo
+- InteroResponse
+
+
+=============================================================================
+CONFIGURATION                                                 *intero-config*
+
+*g:intero_stack_yaml*
+
+  Default: (value inferred from context)
+
+  If you need to use a specific stack.yaml file, you can set this variable.
+  Alternatively, set `STACK_YAML` in your environment.
+
+*g:intero_prompt_regex*
+
+  Default: `'[^-]>'`
+
+  If you use a custom GHCi prompt, you may need to modify the prompt regex so
+  that it matches your custom prompt.
+
+*g:intero_start_immediately*
+
+  Default: `1`
+
+  Intero initializes and starts immediately by default (this includes
+  installing the `intero` package and spawning the background process).
+  To prevent this from happening manually, set this to `0`.
+
+  Note: You will then have to trigger this manually by running |:InteroStart|
+  or |:InteroOpen| before Intero will do anything.
+
+*g:intero_use_neomake*
+
+  Default: `1`
+
+  Intero attempts to use Neomake (|neomake.txt|) if it is installed.
+  To opt out of using Neomake (including silencing warnings about Neomake),
+  set this to `0`.
+
+*g:intero_load_targets*
+
+  Default: []
+
+  Intero automatically loads these targets after it starts. When empty, it
+  uses whatever Stack would normally load as the default target. Also see
+  |:InteroSetTargets| to change the stack targets on the fly.
+
+=============================================================================
+CAVEATS                                                       *intero-caveats*
+
+- Running `:Neomake!` directly will not work. You need to run |:InteroReload|
+  instead.
+
+- Some commands may have unexpected side-effects if you have an autocommand
+  that automatically switches to insert mode when entering a terminal buffer.
+
+- Completion is not handled by this plugin. You might want to checkout out
+  `neco-ghc` if you want completion. (https://github.com/eagletmt/neco-ghc)
+
+=============================================================================
+LICENSE                                                       *intero-license*
+
+BSD3 License (the same license as `ghcmod-vim`).
+
+=============================================================================
+CREDITS                                                       *intero-credits*
+
+The original Intero for Emacs plugin was created by @chrisdone.
+Much of the copy and descriptions in this help file are from the Commercial
+Haskell homepage for Intero: https://commercialhaskell.github.io/intero/
+
+`intero-neovim` was written by @parsonsmatt, with significant contributions
+from @rdnetto.
+
+`intero-neovim` welcomes new contributions! Submit pull requests and open
+issues on GitHub: https://github.com/parsonsmatt/intero-neovim
+
+
+vim:tw=78:et:ts=2:ft=help:norl:
