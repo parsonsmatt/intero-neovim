@@ -85,7 +85,12 @@ endfunction
 " Private:
 """"""""""
 
-function! s:paste_type(response) abort
-    call append(line('.')-1, a:response)
+function! s:paste_type(lines) abort
+    let l:message = join(a:lines, '\n')
+    if l:message =~# ' :: '
+        call append(line('.')-1, a:lines)
+    else
+        echomsg l:message
+    end
 endfunction
 
