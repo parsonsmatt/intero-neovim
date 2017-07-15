@@ -25,6 +25,9 @@ let g:intero_echo_next = 0
 " only the first will be run, after which it will be dropped from the queue.
 let s:response_handlers = []
 
+" The name of the buffer that displays Intero compilation progress.
+let s:compile_term_name = 'Intero_compile'
+
 function! intero#process#initialize() abort
     " This function initializes Intero.
     " It sets any global states we need, builds 'intero' if needed, and emits
@@ -177,7 +180,7 @@ function! s:start_compile(height, opts) abort
 
     enew!
     call termopen('stack ' . intero#util#stack_opts() . ' build intero', a:opts)
-    file Intero_compiling
+    execute 'file ' . s:compile_term_name
 
     set bufhidden=hide
     set noswapfile
@@ -302,7 +305,12 @@ function! s:build_complete(job_id, data, event) abort
     if(a:event ==# 'exit')
         if(a:data == 0)
             let g:intero_built = 1
+            echomsg 'Intero compiled successfully.'
             call intero#process#start()
+            let l:compile_term = bufwinnr(s:compile_term_name)
+            if l:compile_term > 0
+                exec 'silent! ' . l:compile_term . 'wincmd q'
+            endif
         else
             echom 'Intero failed to compile.'
         endif
