@@ -149,9 +149,12 @@ interact with the REPL.
                   it to it's own tab: |CTRL-W_T|.
 
                                                                  *:InteroUses*
-:InteroUses       Prompts you for a command, runs it in the background
-                  process, and displays the result. Useful when you don't want
-                  to have to open up the full REPL.
+:InteroEval [cmd] Runs a command in the background process, and displays the
+                  result. Useful when you don't want to have to open up the
+                  full REPL.
+
+                  Calling |:InteroEval| will 0 arguments will prompt you to
+                  enter a command.
 
 
 Loading Code~

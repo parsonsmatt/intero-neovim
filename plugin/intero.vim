@@ -20,7 +20,7 @@ command! -nargs=0 -bang InteroLoadCurrentModule call intero#repl#load_current_mo
 " Loads the current file in Intero.
 command! -nargs=0 -bang InteroLoadCurrentFile call intero#repl#load_current_file()
 " Prompts user for a string to eval
-command! -nargs=0 -bang InteroEval call intero#repl#eval()
+command! -nargs=? -bang InteroEval call intero#repl#eval(<f-args>)
 " Gets the specific type at the current point
 command! -nargs=0 -bang InteroType call intero#repl#type(0)
 " Gets the type at the current point
