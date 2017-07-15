@@ -40,6 +40,15 @@ command! -nargs=0 -bang InteroRestart call intero#process#restart()
 " Set the load targets for Intero.
 command! -nargs=* -bang InteroSetTargets call intero#process#restart_with_targets(<f-args>)
 
+" Same as the :InteroType commands, but as maps (so they work with selections)
+noremap <expr> <Plug>InteroType intero#repl#pos_for_type(0)
+noremap <expr> <Plug>InteroGenericType intero#repl#pos_for_type(1)
+
+" Two helper commands needed by the above mappings
+" You should never need to call these manually.
+command! -nargs=* -bang -range InteroTypeAt call intero#repl#type_at(0, <f-args>)
+command! -nargs=* -bang -range InteroGenericTypeAt call intero#repl#type_at(1, <f-args>)
+
 if g:intero_use_neomake
     " Neomake integration
     let g:neomake_intero_maker = {

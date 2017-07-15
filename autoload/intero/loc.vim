@@ -19,7 +19,7 @@ function! intero#loc#get_identifier_information() abort
     let l:winview = winsaveview()
     normal! |
     call search('\<' . l:identifier . '\>', '', l:line)
-    let l:beg_col = intero#util#getcol()
+    let l:beg_col = intero#util#getcol(l:line, col('.'))
     let l:end_col = l:beg_col + len(l:identifier)
     let l:cmd = join([':loc-at', l:module, l:line, l:beg_col, l:line, l:end_col, l:identifier], ' ')
     call winrestview(l:winview)

@@ -44,9 +44,9 @@ Some key features:
 
 - **Type Information**
 
-  You can ask for type information of the identifier under your cursor. Intero
-  makes an effort to remember type information even when the module no longer
-  typechecks.
+  You can ask for type information of the identifier under your cursor as well
+  as of a selection. Intero makes an effort to remember type information even
+  when the module no longer typechecks.
 
 - **Jump to Definition**
 
@@ -83,15 +83,14 @@ scenes. Intero will set itself up automatically when you open a Haskell file.
   - `:InteroLoadCurrentFile`
 - To reload whatever's in the REPL:
   - `:InteroReload`
-- To get the type of the current identifier:
-  - `:InteroGenericType`
+- To get the type of the current identifier or selection:
+  - in your vimrc: `map <silent> <leader>t <Plug>InteroGenericType`
+  - then: press `<leader>t`
 - To jump to a definition:
   - first `:InteroLoadCurrentFile`
   - then `:InteroGoToDef`.
 - To switch targets:
   - `:InteroSetTargets`
-
-For complete usage information:
 
 
 ## Usage
@@ -133,8 +132,9 @@ augroup interoMaps
   au FileType haskell nnoremap <silent> <leader>if :InteroLoadCurrentFile<CR>
 
   " Type-related information
-  au FileType haskell nnoremap <silent> <leader>t :InteroGenericType<CR>
-  au FileType haskell nnoremap <silent> <leader>T :InteroType<CR>
+  " Heads up! These next two differ from the rest.
+  au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
+  au FileType haskell map <silent> <leader>T <Plug>InteroType
   au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
 
   " Navigation

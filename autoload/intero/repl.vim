@@ -32,19 +32,51 @@ function! intero#repl#load_current_file() abort
     call intero#repl#send(':l ' . expand('%:p'))
 endfunction
 
+" This function only gets the type of what's under the cursor.
+" For a visual selection, you MUST use the key mapping, not the command.
 function! intero#repl#type(generic) abort
-    " Gets the type at the current point.
-    let l:line = line('.')
-    let l:col = intero#util#getcol()
+    " " '.' gets the cursor pos (or the end of the selection if selection)
+    let [l:l, l:c] = getpos('.')[1:2]
+
+    call intero#repl#type_at(a:generic, l:l, l:c, l:l, l:c)
+endfunction
+
+function! intero#repl#type_at(generic, l1, c1, l2, c2) abort
     let l:module = intero#loc#detect_module()
+
     if a:generic
-        let l:identifier = intero#util#get_haskell_identifier()
+        if !(a:l1 == a:l2 && a:c1 == a:c2)
+            let l:identifier = intero#util#get_selection(a:l1, a:c1, a:l2, a:c2)
+        else
+            let l:identifier = intero#util#get_haskell_identifier()
+        endif
     else
         let l:identifier = 'it'
     endif
 
+    " Fixup tabs for Stack
+    let l:col1 = intero#util#getcol(a:l1, a:c1)
+    let l:col2 = intero#util#getcol(a:l2, a:c2)
+
     call intero#repl#eval(
-        \ join([':type-at', l:module, l:line, l:col, l:line, l:col, l:identifier], ' '))
+        \ join([':type-at', l:module, a:l1, l:col1, a:l2, l:col2, l:identifier], ' '))
+endfunction
+
+" This function gets the type of what's under the cursor OR under a selection.
+" It MUST be run from a key mapping (commands exit you out of visual mode).
+function! intero#repl#pos_for_type(generic) abort
+    " 'v' gets the start of the selection (or cursor pos if no selection)
+    let [l:l1, l:c1] = getpos('v')[1:2]
+    " " '.' gets the cursor pos (or the end of the selection if selection)
+    let [l:l2, l:c2] = getpos('.')[1:2]
+
+    " Meant to be used from an expr map (:help :map-<expr>).
+    " That means we have to return the next command as a string.
+    if a:generic
+      return ':InteroGenericTypeAt '.l:l1.' '.l:c1.' '.l:l2.' '.l:c2."\<CR>"
+    else
+      return ':InteroTypeAt '.l:l1.' '.l:c1.' '.l:l2.' '.l:c2."\<CR>"
+    endif
 endfunction
 
 function! intero#repl#info() abort

@@ -52,12 +52,10 @@ function! intero#util#print_error(msg) abort "{{{
     echohl None
 endfunction "}}}
 
-function! intero#util#getcol() abort "{{{
-    let l:line = line('.')
-    let l:col = col('.')
-    let l:str = getline(l:line)[:(l:col - 1)]
+function! intero#util#getcol(line, col) abort "{{{
+    let l:str = getline(a:line)[:(a:col - 1)]
     let l:tabcnt = len(substitute(l:str, '[^\t]', '', 'g'))
-    return l:col + 7 * l:tabcnt
+    return a:col + 7 * l:tabcnt
 endfunction "}}}
 
 function! intero#util#tocol(line, col) abort "{{{
@@ -72,6 +70,14 @@ function! intero#util#tocol(line, col) abort "{{{
     endfor
     return l:len + 1
 endfunction "}}}
+
+" From <https://stackoverflow.com/a/6271254>
+function! intero#util#get_selection(l1, c1, l2, c2) abort
+    let l:lines = getline(a:l1, a:l2)
+    let l:lines[-1] = l:lines[-1][: a:c2 - (&selection ==? 'inclusive' ? 1 : 2)]
+    let l:lines[0] = l:lines[0][a:c1 - 1:]
+    return join(l:lines, "\n")
+endfunction
 
 function! s:load_targets_from_stack() abort
     return systemlist('stack ide targets')

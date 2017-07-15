@@ -54,9 +54,9 @@ Load your file and play around with top-level functions directly.
 
 Type Information~
 
-You can ask for type information of the identifier under your cursor. Intero
-makes an effort to remember type information even when the module no longer
-typechecks.
+You can ask for type information of the identifier under your cursor as well
+as of a selection. Intero makes an effort to remember type information even
+when the module no longer typechecks.
 
 Jump to Definition~
 
@@ -75,7 +75,8 @@ OVERVIEW                                                     *intero-overview*
 To open the REPL:                             |:InteroOpen|
 To load into the REPL:                        |:InteroLoadCurrentFile|
 To reload whatever's in the REPL:             |:InteroReload|
-To get the type of the current identifier:    |:InteroGenericType|
+To get the type of the current identifier:    |<Plug>InteroGenericType|
+                                              (requires binding a key to this)
 To jump to a definition:                first |:InteroLoadCurrentFile|
                                          then |:InteroGoToDef|.
 To switch targets:                            |:InteroSetTargets|
@@ -189,16 +190,31 @@ won't work until you've loaded the current file or module.
 
 Inspecting Types~
                                                                 *intero-types*
-Intero is able to tell you the type of any identifier in your code.
+Intero is able to tell you the type of any identifier in your code, as well as
+that of any visual selection.
 
-                                                          *:InteroGenericType*
-                                                          *:InteroType*
+                                                     *<Plug>InteroGenericType*
+                                                     *<Plug>InteroType*
+                                                     *:InteroGenericType*
+                                                     *:InteroType*
+<Plug>InteroGenericType
+<Plug>InteroType
 :InteroGenericType
 :InteroType
                   Shows you the type of the identifier under your cursor.
-                  |:InteroGenericType| shows you the fully-generic type
-                  (including type variables, etc.). |:InteroType| shows you the
-                  same, but with all type variables instantiated if possible.
+                  The "Generic" variant shows you the fully-generic type
+                  (including type variables, etc.). The non-Generic variant
+                  tries to instantiate type variables whenever possible.
+
+                  Using the <Plug> mappings (not the commands) is preferred,
+                  as they'll also work with visual selections. You can bind
+                  bind these <Plug> mappings to a key of your choice:
+>
+                      map <silent> <leader>t <Plug>InteroGenericType
+<
+                  NOTE: |:map| (not |:noremap|) is required here (it tells
+                  Vim to "re-map" <leader>t through <Plug>InteroGenericType
+                  into the code internal to `intero-neovim`.)
 
                                                            *:InteroTypeInsert*
 :InteroTypeInsert
