@@ -104,11 +104,7 @@ function! intero#process#start() abort
 
     augroup close_intero
         autocmd!
-        autocmd VimLeave * call intero#repl#eval(":quit")
-        autocmd VimLeavePre * InteroKill
-        autocmd VimLeave * InteroKill
-        autocmd VimLeavePre * call jobstop(g:intero_job_id)
-        autocmd VimLeave * call jobstop(g:intero_job_id)
+        autocmd VimLeavePre * call intero#process#kill()
         autocmd VimLeave * call intero#maker#cleanup()
     augroup END
 
@@ -120,6 +116,8 @@ function! intero#process#kill() abort
     if exists('g:intero_buffer_id')
         exe 'bd! ' . g:intero_buffer_id
         unlet g:intero_buffer_id
+        " Deleting a terminal buffer implicitly stops the job
+        unlet g:intero_job_id
     else
         echo 'No Intero process loaded.'
     endif
