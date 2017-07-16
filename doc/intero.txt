@@ -80,6 +80,8 @@ To get the type of the current identifier:    |<Plug>InteroGenericType|
 To jump to a definition:                first |:InteroLoadCurrentFile|
                                          then |:InteroGoToDef|.
 To switch targets:                            |:InteroSetTargets|
+                                              :InteroClearTargets
+                                              :InteroUseAllTargets
 
 =============================================================================
 USAGE                                                           *intero-usage*
@@ -234,9 +236,18 @@ guess for which to load. You can switch between targets on the fly
                                                            *:InteroSetTargets*
 :InteroSetTargets {target} ..
                   Restarts Intero and starts using the specified targets (can
-                  be more than one). Overwrites whatever was previously in
-                  |g:intero_load_targets|.
+                  be more than one). If the target doesn't exist in the output
+                  of stack ide targets, then it is interpreted as a regex and
+                  all matches are enabled. Overwrites whatever was previously
+                  in |g:intero_load_targets|.
 
+                  Calling |:InteroSetTargets| without any arguments will
+                  prompt you to select the targets you want to load from a
+                  list.
+
+                                                       *:InteroUseAllTargets*
+:InteroUseAllTargets 
+                  This loads all targets specified by `stack ide targets`.
 
 Documentation Pending~
 
@@ -287,7 +298,8 @@ CONFIGURATION                                                 *intero-config*
 
   Intero automatically loads these targets after it starts. When empty, it
   uses whatever Stack would normally load as the default target. Also see
-  |:InteroSetTargets| to change the stack targets on the fly.
+  |:InteroSetTargets| to change the stack targets on the fly. These must be
+  valid
 
 =============================================================================
 CAVEATS                                                       *intero-caveats*

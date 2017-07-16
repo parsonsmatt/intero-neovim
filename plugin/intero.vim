@@ -39,6 +39,8 @@ command! -nargs=0 -bang InteroUses call intero#repl#uses() | set hlsearch
 command! -nargs=0 -bang InteroRestart call intero#process#restart()
 " Set the load targets for Intero.
 command! -nargs=* -bang InteroSetTargets call intero#process#restart_with_targets(<f-args>)
+" Set Intero to use all targets given by stack ide targets
+command! -nargs=0 -bang InteroUseAllTargets call intero#targets#enable_all_targets()
 
 " Same as the :InteroType commands, but as maps (so they work with selections)
 noremap <expr> <Plug>InteroType intero#repl#pos_for_type(0)

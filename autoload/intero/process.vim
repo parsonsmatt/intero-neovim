@@ -182,7 +182,12 @@ function! intero#process#restart() abort
 endfunction
 
 function! intero#process#restart_with_targets(...) abort
-    call intero#util#set_load_targets(a:000)
+    if a:0 == 0
+        let l:targets = intero#targets#prompt_for_targets()
+    else
+        let l:targets = a:000
+    endif
+    call intero#targets#set_load_targets(l:targets)
     call intero#process#restart()
 endfunction
 
@@ -215,15 +220,15 @@ function! s:start_buffer(height) abort
     exe 'below ' . a:height . ' split'
 
     enew
-    call termopen('stack ' 
-        \ . intero#util#stack_opts() 
+    silent call termopen('stack '
+        \ . intero#util#stack_opts()
         \ . ' ghci --with-ghc intero '
         \ . intero#util#stack_build_opts(), {
                 \ 'on_stdout': function('s:on_stdout'),
                 \ 'cwd': pyeval('intero.stack_dirname()')
                 \ })
 
-    file Intero
+    silent file Intero
     set bufhidden=hide
     set noswapfile
     set hidden
