@@ -64,10 +64,29 @@ function! intero#process#initialize() abort
 
         " Find stack.yaml
         if (!exists('g:intero_stack_yaml'))
-            " Change dir temporarily and see if stack can find a config
-            silent! lcd %:p:h
-            let g:intero_stack_yaml = systemlist('stack path --config-location')[-1]
-            silent! lcd -
+            " If there's a STACK_YAML environment variable, try to interpret
+            " that.
+            let l:should_cd_to_current_file = empty($STACK_YAML)
+            if l:should_cd_to_current_file
+                " there's no stack yaml env variable, so we can just let stack
+                " figure it out.  Change dir temporarily and see if stack can
+                " find a config
+                silent! lcd %:p:h
+            endif
+
+            " if there's an environment variable, we assume it works
+            " relative to where neovim was started.
+            let l:stack_path_config = systemlist('stack path --config-location')
+            call filter(l:stack_path_config, "v:val =~? '^/.*\.yaml'")
+            if empty(l:stack_path_config)
+                echomsg 'Failed to identify a stack.yaml. Does it exist?'
+            else
+                let g:intero_stack_yaml = l:stack_path_config[0]
+            endif
+
+            if l:should_cd_to_current_file
+                silent! lcd -
+            endif
         endif
 
         " Ensure that intero is compiled
