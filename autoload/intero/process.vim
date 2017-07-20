@@ -251,15 +251,17 @@ function! s:on_stdout(jobid, lines, event) abort
         if s:current_line =~# '\r$'
             " Remove trailing newline, control chars
             let s:current_line = substitute(s:current_line, '\r$', '', '')
-            let s:current_line = pyeval('intero.strip_control_chars()')
+            let s:current_line = pyeval('intero.strip_control_chars("s:current_line")')
 
             " Flush line buffer
             let s:current_response = s:current_response + [s:current_line]
             let s:current_line = ''
         endif
 
-        " If the current line is a prompt, we just completed a response
-        if s:current_line =~ (g:intero_prompt_regex . '$')
+        " If the current line is a prompt, we just completed a response.
+        " Note that we need to strip control chars here, because otherwise
+        " they're only removed when the line is added to the response.
+        if pyeval('intero.strip_control_chars("s:current_line")') =~ (g:intero_prompt_regex . '$')
             if len(s:current_response) > 0
                 " Separate the input command from the response
                 let l:cmd = substitute(s:current_response[0], '.*' . g:intero_prompt_regex, '', '')
