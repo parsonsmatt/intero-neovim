@@ -24,13 +24,17 @@ def stack_dirname():
     return os.path.dirname(vim.eval('g:intero_stack_yaml'))
 
 
-def strip_control_chars():
-    '''Removes control characters from the line buffer.'''
+def strip_control_chars(var):
+    '''Removes control characters from the specified variable.'''
 
-    current_line = vim.eval('s:current_line')
+    return strip_internal(vim.eval(var))
+
+
+def strip_internal(s):
+    '''Helper function for removing control characters.'''
 
     for r in regexes:
-        current_line = r.sub("", current_line)
+        s = r.sub("", s)
 
-    return current_line
+    return s
 
