@@ -3,5 +3,3 @@ packages:
 - '.'
 extra-deps:
 - 'intero-0.1.16'
-flags: {}
-extra-package-dbs: []
