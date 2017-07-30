@@ -5,8 +5,12 @@
 """"""""""
 
 function! intero#loc#go_to_def() abort
-    call intero#repl#send(intero#util#make_command(':loc-at'))
-    call intero#process#add_handler(function('s:handle_loc'))
+    if !g:intero_started
+        echoerr 'Intero is still starting up'
+    else
+        call intero#repl#send(intero#util#make_command(':loc-at'))
+        call intero#process#add_handler(function('s:handle_loc'))
+    endif
 endfunction
 
 function! intero#loc#get_identifier_information() abort

@@ -5,31 +5,43 @@
 """"""""""
 
 function! intero#repl#eval(...) abort
-    " Given no arguments, this requests an expression from the user and
-    " evaluates it in the Intero REPL.
-    if a:0 == 0
-        call inputsave()
-        let l:eval = input('Command: ')
-        call inputrestore()
-    elseif a:0 == 1
-        let l:eval = a:1
+    if !g:intero_started
+        echoerr 'Intero is still starting up'
     else
-        echomsg 'Call with nothing for eval or with command string.'
-        return
-    endif
+        " Given no arguments, this requests an expression from the user and
+        " evaluates it in the Intero REPL.
+        if a:0 == 0
+            call inputsave()
+            let l:eval = input('Command: ')
+            call inputrestore()
+        elseif a:0 == 1
+            let l:eval = a:1
+        else
+            echomsg 'Call with nothing for eval or with command string.'
+            return
+        endif
 
-    let g:intero_echo_next = 1
-    call intero#repl#send(l:eval)
+        let g:intero_echo_next = 1
+        call intero#repl#send(l:eval)
+    endif
 endfunction
 
 function! intero#repl#load_current_module() abort
-    " Loads the current module, inferred from the given filename.
-    call intero#repl#send(':l ' . intero#loc#detect_module())
+    if !g:intero_started
+        echoerr 'Intero is still starting up'
+    else
+        " Loads the current module, inferred from the given filename.
+        call intero#repl#send(':l ' . intero#loc#detect_module())
+    endif
 endfunction
 
 function! intero#repl#load_current_file() abort
-    " Load the current file (useful for using the stack global project)
-    call intero#repl#send(':l ' . expand('%:p'))
+    if !g:intero_started
+        echoerr 'Intero is still starting up'
+    else
+        " Load the current file (useful for using the stack global project)
+        call intero#repl#send(':l ' . expand('%:p'))
+    endif
 endfunction
 
 " This function only gets the type of what's under the cursor.
@@ -80,8 +92,12 @@ function! intero#repl#pos_for_type(generic) abort
 endfunction
 
 function! intero#repl#info() abort
-    let l:ident = intero#util#get_haskell_identifier()
-    call intero#repl#eval(':info ' . l:ident)
+    if !g:intero_started
+        echoerr 'Intero is still starting up'
+    else
+        let l:ident = intero#util#get_haskell_identifier()
+        call intero#repl#eval(':info ' . l:ident)
+    endif
 endfunction
 
 function! intero#repl#send(str) abort
@@ -94,23 +110,35 @@ function! intero#repl#send(str) abort
 endfunction
 
 function! intero#repl#insert_type() abort
-    call intero#process#add_handler(function('s:paste_type'))
-    call intero#repl#send(intero#util#make_command(':type-at'))
+    if !g:intero_started
+        echoerr 'Intero is still starting up'
+    else
+        call intero#process#add_handler(function('s:paste_type'))
+        call intero#repl#send(intero#util#make_command(':type-at'))
+    endif
 endfunction
 
 function! intero#repl#reload() abort
-    " Truncate file, so that we don't show stale results while recompiling
-    call intero#maker#write_update([])
+    if !g:intero_started
+        echoerr 'Intero is still starting up'
+    else
+        " Truncate file, so that we don't show stale results while recompiling
+        call intero#maker#write_update([])
 
-    call intero#repl#send(':reload')
+        call intero#repl#send(':reload')
+    endif
 endfunction
 
 function! intero#repl#uses() abort
-    let l:info = intero#loc#get_identifier_information()
-    call intero#repl#send(intero#util#make_command(':uses'))
-    exec 'normal! /' . l:info.identifier . "\<CR>N"
-    set hlsearch
-    let @/ = l:info.identifier
+    if !g:intero_started
+        echoerr 'Intero is still starting up'
+    else
+        let l:info = intero#loc#get_identifier_information()
+        call intero#repl#send(intero#util#make_command(':uses'))
+        exec 'normal! /' . l:info.identifier . "\<CR>N"
+        set hlsearch
+        let @/ = l:info.identifier
+    endif
 endfunction
 
 """"""""""
