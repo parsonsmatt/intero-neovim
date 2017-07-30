@@ -137,8 +137,7 @@ function! intero#process#kill() abort
         unlet g:intero_buffer_id
         " Deleting a terminal buffer implicitly stops the job
         unlet g:intero_job_id
-    else
-        echo 'No Intero process loaded.'
+        let g:intero_started = 0
     endif
 endfunction
 
@@ -226,8 +225,8 @@ function! s:start_buffer(height) abort
 
     enew
     silent call termopen('stack '
-        \ . intero#util#stack_opts()
-        \ . l:invocation
+        \ . intero#util#stack_opts() . ' '
+        \ . l:invocation . ' '
         \ . intero#util#stack_build_opts(), {
                 \ 'on_stdout': function('s:on_stdout'),
                 \ 'cwd': pyeval('intero.stack_dirname()')
@@ -283,7 +282,6 @@ function! s:new_response(cmd, response) abort
     let l:initial_compile = 0
 
     " This means that Intero is now available to run commands
-    " TODO: ignore commands until this is set
     if !g:intero_started
         echom 'Intero ready'
         let g:intero_started = 1
