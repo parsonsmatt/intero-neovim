@@ -219,10 +219,15 @@ function! s:start_buffer(height) abort
     " ID of the buffer.
     exe 'below ' . a:height . ' split'
 
+    let l:invocation = 'ghci --with-ghc intero'
+    if exists('g:intero_ghci_options')
+      let l:invocation .= ' --ghci-options="' . g:intero_ghci_options . '"'
+    endif
+
     enew
     silent call termopen('stack '
         \ . intero#util#stack_opts()
-        \ . ' ghci --with-ghc intero '
+        \ . l:invocation
         \ . intero#util#stack_build_opts(), {
                 \ 'on_stdout': function('s:on_stdout'),
                 \ 'cwd': pyeval('intero.stack_dirname()')
