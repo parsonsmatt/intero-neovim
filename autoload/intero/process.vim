@@ -226,8 +226,8 @@ function! s:start_buffer(height) abort
 
     enew
     silent call termopen('stack '
-        \ . intero#util#stack_opts()
-        \ . l:invocation
+        \ . intero#util#stack_opts() . ' '
+        \ . l:invocation . ' '
         \ . intero#util#stack_build_opts(), {
                 \ 'on_stdout': function('s:on_stdout'),
                 \ 'cwd': pyeval('intero.stack_dirname()')
