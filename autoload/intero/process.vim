@@ -273,6 +273,8 @@ function! s:on_stdout(jobid, lines, event) abort
             endif
 
             let s:current_response = []
+        elseif s:current_line =~ '>'
+            echoerr string(s:current_line)
         endif
 
     endfor
