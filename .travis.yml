@@ -1,8 +1,16 @@
 language: python
+
+python:
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "nightly"
+
 install:
     - pip install vim-vint flake8
 
 script:
     - vint --enable-neovim --style-problem .
     - flake8 --max-line-length=150 --ignore=W391
-
