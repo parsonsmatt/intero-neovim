@@ -12,5 +12,5 @@ install:
     - pip install vim-vint pylama
 
 script:
-    - vint --enable-neovim --style-problem .
+    - vint .
     - pylama
