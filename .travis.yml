@@ -9,8 +9,8 @@ python:
   - "nightly"
 
 install:
-    - pip install vim-vint flake8
+    - pip install vim-vint pylama
 
 script:
     - vint --enable-neovim --style-problem .
-    - flake8 --max-line-length=150 --ignore=W391
+    - pylama
