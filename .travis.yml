@@ -8,6 +8,11 @@ python:
   - "3.6"
   - "nightly"
 
+matrix:
+  fast_finish: true
+  allow_failures:
+    - python: "nightly"
+
 install:
     - pip install vim-vint pylama
 
