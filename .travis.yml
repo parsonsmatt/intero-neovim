@@ -13,8 +13,11 @@ matrix:
   allow_failures:
     - python: "nightly"
 
+before_install:
+    - pip install -U pip pipenv
+
 install:
-    - pip install vim-vint pylama
+    - pipenv install --dev
 
 script:
     - vint .
