@@ -160,6 +160,31 @@ let g:intero_start_immediately = 0
 - Completion is not handled by this plugin. You might want to checkout out
   [neco-ghc][] if you want completion.
 
+## Contributing
+
+### Python Hacking
+
+Get your environment setup by installing [pipenv] and running:
+
+[pipenv]: http://docs.pipenv.org/en/latest/advanced.html#fancy-installation-of-pipenv
+
+``` bash
+$ pipenv install --dev
+```
+
+Your system level python installation will not be affected.
+
+Then drop into an environment activated shell with:
+
+``` bash
+$ pipenv shell
+```
+
+Then you can run the following:
+
+  * Run the tests with `pytest`
+  * Run the vim linter wiht `vint .`
+  * Run the Python code quality checker with `pylama`
 
 ## License
 
