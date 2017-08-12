@@ -1,5 +1,7 @@
-# Functions consumed from Vimscript. This file is loaded as a module, to avoid
-# polluting the global namespace.
+'''Functions consumed from Vimscript.
+
+This file is loaded as a module, to avoid polluting the global namespace.
+'''
 
 import os.path
 import re
