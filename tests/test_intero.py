@@ -23,6 +23,6 @@ def test_stack_dirname(mock_vim):
 def test_strip_internal(mock_vim):
     from intero import strip_internal
 
-    assert strip_internal('\ESC[38;2;255;100;0mλ> \ESC[m') == 'λ> '
+    assert strip_internal('\x1b[38;2;255;100;0mλ> \x1b[m') == 'λ> '
     assert strip_internal('\x1b[01;31mfoobar') == 'foobar'
     assert strip_internal('\x1b[?2lfoobar') == 'foobar'
