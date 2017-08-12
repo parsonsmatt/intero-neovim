@@ -5,4 +5,4 @@ verbose.log
 stdout.log
 *.pyc
 *.egg*
-
+.cache
