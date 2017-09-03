@@ -301,6 +301,12 @@ CONFIGURATION                                                 *intero-config*
   |:InteroSetTargets| to change the stack targets on the fly. These must be
   valid
 
+g:intero_ghci_options
+
+  Default: ''
+
+  Options that configure the behaviour of GHCi. For example, -fobject-code.
+
 =============================================================================
 CAVEATS                                                       *intero-caveats*
 
