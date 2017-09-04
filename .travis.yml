@@ -14,7 +14,7 @@ matrix:
     - python: "nightly"
 
 before_install:
-    - pip install -U pip pipenv
+    - pip install -IU pip pipenv
 
 install:
     - pipenv install --dev
