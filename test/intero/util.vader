@@ -1,0 +1,8 @@
+Execute (strip_control_characters removes 256-bit color codes):
+    AssertEqual intero#util#strip_control_characters("\e[38;2;255;100;0mλ> \e[m"), 'λ> '
+
+Execute (strip_control_characters removes ANSI color codes):
+    AssertEqual intero#util#strip_control_characters("\e[01;31mfoobar"), 'foobar'
+
+Execute (strip_control_characters xterm code):
+    AssertEqual intero#util#strip_control_characters("\e[?2lfoobar"), 'foobar'

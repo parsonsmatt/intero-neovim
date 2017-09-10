@@ -79,4 +79,23 @@ function! intero#util#get_selection(l1, c1, l2, c2) abort
     return join(l:lines, "\n")
 endfunction
 
+function! intero#util#strip_control_characters(line) abort
+    " Filter out ANSI codes - they are needed for interactive use, but we
+    " don't care about them. Note that we replace [0-?] with [0-Z] to filter
+    " out the arrow keys as well (xterm codes)
+    "
+    " https://stackoverflow.com/questions/14693701/
+    let s:regex1 = '\v([\x9b]|[\x1b]\[)[0-Z]*[ -\/]*[@-~]'
+
+    " Filter out DECPAM/DECPNM, since they're emitted as well
+    "
+    " https://www.xfree86.org/4.8.0/ctlseqs.html
+    let s:regex2 = '\v[\x1b][>=]'
+
+    let l:result = a:line
+    let l:result = substitute(l:result, s:regex1, '', 'g')
+    let l:result = substitute(l:result, s:regex2, '', 'g')
+    return l:result
+endfunction
+
 " vim: set ts=4 sw=4 et fdm=marker:

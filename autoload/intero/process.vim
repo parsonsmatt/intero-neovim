@@ -57,11 +57,6 @@ function! intero#process#initialize() abort
             echom 'Neomake not detected. Flychecking will be disabled.'
         endif
 
-        " Load Python code
-        py import sys
-        call pyeval('sys.path.append("' . g:intero_plugin_root . '")')
-        py import intero
-
         " Find stack.yaml
         if (!exists('g:intero_stack_yaml'))
             " If there's a STACK_YAML environment variable, try to interpret
@@ -229,7 +224,7 @@ function! s:start_buffer(height) abort
         \ . l:invocation . ' '
         \ . intero#util#stack_build_opts(), {
                 \ 'on_stdout': function('s:on_stdout'),
-                \ 'cwd': pyeval('intero.stack_dirname()')
+                \ 'cwd': fnamemodify(g:intero_stack_yaml, ':p:h')
                 \ })
 
     silent file Intero
@@ -255,7 +250,7 @@ function! s:on_stdout(jobid, lines, event) abort
         if s:current_line =~# '\r$'
             " Remove trailing newline, control chars
             let s:current_line = substitute(s:current_line, '\r$', '', '')
-            let s:current_line = pyeval('intero.strip_control_chars("s:current_line")')
+            let s:current_line = intero#util#strip_control_characters(s:current_line)
 
             " Flush line buffer
             let s:current_response = s:current_response + [s:current_line]

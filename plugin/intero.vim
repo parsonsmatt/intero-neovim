@@ -68,7 +68,4 @@ if g:intero_use_neomake
         \ }
 endif
 
-" Store the path to the plugin directory, so we can lazily load the Python module
-let g:intero_plugin_root = expand('<sfile>:p:h:h')
-
 " vim: set ts=4 sw=4 et fdm=marker:

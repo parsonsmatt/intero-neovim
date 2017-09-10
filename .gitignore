@@ -6,3 +6,4 @@ stdout.log
 *.pyc
 *.egg*
 .cache
+vader.vim
