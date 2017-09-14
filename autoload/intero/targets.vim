@@ -82,7 +82,7 @@ function! intero#targets#prompt_for_targets() abort
 
     " l:selected of 0 means that the user didn't select anything, so we
     " are done here and can return.
-    while l:selected > 0 && l:selected < len(l:target_list)
+    while l:selected > 0 && l:selected < len(l:target_list) + 1
         " because the prompt is given in the inputlist, we have to substract one to
         " the index that was given to select the appropriate index.
         let l:actual_selected = l:selected - 1
