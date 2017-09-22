@@ -151,13 +151,19 @@ interact with the REPL.
                   use a vertical split use |CTRL-W_H| or |CTRL-W_L|. To move
                   it to it's own tab: |CTRL-W_T|.
 
-                                                                 *:InteroUses*
+                                                                 *:InteroEval*
 :InteroEval [cmd] Runs a command in the background process, and displays the
                   result. Useful when you don't want to have to open up the
                   full REPL.
 
                   Calling |:InteroEval| will 0 arguments will prompt you to
                   enter a command.
+
+                                                                 *:InteroSend*
+:InteroSend [cmd] Just like |:InteroEval|, but only shows the output in the
+                  Intero buffer (doesn't also echo it). This is nice when you
+                  have multi-line output that you want to keep around for a
+                  while.
 
 
 Loading Code~
