@@ -21,6 +21,8 @@ command! -nargs=0 -bang InteroLoadCurrentModule call intero#repl#load_current_mo
 command! -nargs=0 -bang InteroLoadCurrentFile call intero#repl#load_current_file()
 " Prompts user for a string to eval
 command! -nargs=? -bang InteroEval call intero#repl#eval(<f-args>)
+" Sends a string to the Intero buffer (doesn't prompt to "press any key")
+command! -nargs=? -bang InteroSend call intero#repl#send(<f-args>)
 " Gets the specific type at the current point
 command! -nargs=0 -bang InteroType call intero#repl#type(0)
 " Gets the type at the current point
