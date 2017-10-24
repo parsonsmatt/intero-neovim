@@ -133,12 +133,17 @@ endfunction
 function! intero#process#kill() abort
     " Kills the intero buffer, if it exists.
     if exists('g:intero_buffer_id')
-        exe 'bd! ' . g:intero_buffer_id
+        " The buffer may have been manually closed if Intero crashed
+        if bufexists(g:intero_buffer_id)
+            exe 'bd! ' . g:intero_buffer_id
+        endif
+
         unlet g:intero_buffer_id
         " Deleting a terminal buffer implicitly stops the job
         unlet g:intero_job_id
-        let g:intero_started = 0
     endif
+
+    let g:intero_started = 0
 endfunction
 
 function! intero#process#hide() abort
