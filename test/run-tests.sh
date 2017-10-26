@@ -9,6 +9,8 @@ unset CDPATH
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
+export VADER_OUTPUT_FILE=vader.log
 set -x
 nvim -N -u vimrc.vim -c 'Vader! **/*.vader'
+cat ${VADER_OUTPUT_FILE}
 set +x
