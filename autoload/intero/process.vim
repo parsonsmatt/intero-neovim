@@ -254,7 +254,7 @@ function! s:on_stdout(jobid, lines, event) abort
         " If we've found a newline, flush the line buffer
         if s:current_line =~# '\r$'
             " Remove trailing newline, control chars
-            let s:current_line = substitute(s:current_line, '\r$', '', '')
+            let s:current_line = substitute(s:current_line, '\m\r$', '', '')
             let s:current_line = intero#util#strip_control_characters(s:current_line)
 
             " Flush line buffer
@@ -268,7 +268,7 @@ function! s:on_stdout(jobid, lines, event) abort
         if intero#util#strip_control_characters(s:current_line) =~ (g:intero_prompt_regex . '$')
             if len(s:current_response) > 0
                 " Separate the input command from the response
-                let l:cmd = substitute(s:current_response[0], '.*' . g:intero_prompt_regex, '', '')
+                let l:cmd = substitute(s:current_response[0], '\m.*' . g:intero_prompt_regex, '', '')
                 call s:new_response(l:cmd, s:current_response[1:])
             endif
 

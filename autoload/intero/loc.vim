@@ -64,8 +64,8 @@ function! s:handle_loc(resp) abort
         echom l:response
     else
         let l:loc_split = split(l:module_or_loc, '-')
-        let l:start = substitute(l:loc_split[0], '[\(\)]', '', 'g')
-        let l:end = substitute(l:loc_split[1], '[\(\)]', '', 'g')
+        let l:start = substitute(l:loc_split[0], '\m[\(\)]', '', 'g')
+        let l:end = substitute(l:loc_split[1], '\m[\(\)]', '', 'g')
         let l:start_split = split(l:start, ',')
         let l:start_row = l:start_split[0]
         let l:start_col = l:start_split[1]
