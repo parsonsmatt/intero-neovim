@@ -54,7 +54,7 @@ endfunction "}}}
 
 function! intero#util#getcol(line, col) abort "{{{
     let l:str = getline(a:line)[:(a:col - 1)]
-    let l:tabcnt = len(substitute(l:str, '[^\t]', '', 'g'))
+    let l:tabcnt = len(substitute(l:str, '\m[^\t]', '', 'g'))
     return a:col + 7 * l:tabcnt
 endfunction "}}}
 
@@ -85,12 +85,13 @@ function! intero#util#strip_control_characters(line) abort
     " out the arrow keys as well (xterm codes)
     "
     " https://stackoverflow.com/questions/14693701/
-    let s:regex1 = '\v([\x9b]|[\x1b]\[)[0-Z]*[ -\/]*[@-~]'
+    " https://en.wikipedia.org/wiki/ANSI_escape_code#CSI_sequences
+    let s:regex1 = '\v\C([\x9b]|[\x1b]\[)[0-Z]*[ -\/]*[@-~]'
 
     " Filter out DECPAM/DECPNM, since they're emitted as well
     "
     " https://www.xfree86.org/4.8.0/ctlseqs.html
-    let s:regex2 = '\v[\x1b][>=]'
+    let s:regex2 = '\v\C[\x1b][>=]'
 
     let l:result = a:line
     let l:result = substitute(l:result, s:regex1, '', 'g')
