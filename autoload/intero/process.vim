@@ -72,7 +72,7 @@ function! intero#process#initialize() abort
             " if there's an environment variable, we assume it works
             " relative to where neovim was started.
             let l:stack_path_config = systemlist('stack path --config-location')
-            call filter(l:stack_path_config, "v:val =~? '^/.*\.yaml'")
+            call filter(l:stack_path_config, "v:val =~? '^.*\.yaml'")
             if empty(l:stack_path_config)
                 echomsg 'Failed to identify a stack.yaml. Does it exist?'
             else
