@@ -12,6 +12,11 @@ if (!exists('g:intero_load_targets'))
     let g:intero_load_targets = []
 endif
 
+if (!exists('g:intero_stack_targets'))
+    " A cached list of the stack targets.
+    let g:intero_stack_targets = []
+endif
+
 " Attempt to set the load targets. When passed an empty array, this uses the
 " targets as given by `stack ide targets`.
 function! intero#targets#set_load_targets(targets) abort
@@ -61,7 +66,14 @@ function! intero#targets#load_targets_as_string() abort
 endfunction
 
 function! intero#targets#load_targets_from_stack() abort
-    return systemlist('stack ide targets')
+    if empty(g:intero_stack_targets)
+        let g:intero_stack_targets = systemlist('stack ide targets')
+    endif
+    return g:intero_stack_targets
+endfunction
+
+function! intero#targets#clear_target_cache() abort
+    let g:intero_stack_targets = []
 endfunction
 
 function! intero#targets#prompt_for_targets() abort

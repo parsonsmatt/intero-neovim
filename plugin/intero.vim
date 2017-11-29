@@ -43,6 +43,8 @@ command! -nargs=0 -bang InteroRestart call intero#process#restart()
 command! -nargs=* -bang InteroSetTargets call intero#process#restart_with_targets(<f-args>)
 " Set Intero to use all targets given by stack ide targets
 command! -nargs=0 -bang InteroUseAllTargets call intero#targets#enable_all_targets()
+" Clear the cached targets (useful if you've moved into a new stack project)
+command! -nargs=0 -bang InteroClearTargetCache call intero#targets#clear_target_cache()
 
 " Same as the :InteroType commands, but as maps (so they work with selections)
 noremap <expr> <Plug>InteroType intero#repl#pos_for_type(0)

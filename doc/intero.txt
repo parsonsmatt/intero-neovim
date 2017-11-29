@@ -239,6 +239,10 @@ guess for which to load. You can switch between targets on the fly
 (|:InteroSetTargets|), or you can configure which target to use globally
 (|g:intero_load_targets|).
 
+Intero will cache your stack targets for you. If you've changed into a
+different stack project than you were in initially, you may want to call
+(:InteroClearTargetCache) to reload the target list from stack.
+
                                                            *:InteroSetTargets*
 :InteroSetTargets {target} ..
                   Restarts Intero and starts using the specified targets (can
@@ -255,11 +259,17 @@ guess for which to load. You can switch between targets on the fly
 :InteroUseAllTargets 
                   This loads all targets specified by `stack ide targets`.
 
+                                                       *:InteroClearTargetCache*
+:InteroClearTargetCache
+                  This clears the cache Intero keeps of the stack targets,
+                  allowing the program to reload them from stack. Useful if
+                  you've changed your intero project in the same neovim
+                  session.
+
 Documentation Pending~
 
 - InteroUses
 - InteroInfo
-- InteroResponse
 
 
 =============================================================================
