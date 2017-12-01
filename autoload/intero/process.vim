@@ -18,6 +18,10 @@ let g:intero_started = 0
 " Whether Intero has done its initialization yet
 let s:intero_initialized = 0
 
+let s:no_version = [0, 0, 0]
+" The version of GHCi, parsed on startup.
+let g:intero_ghci_version = s:no_version
+
 " If true, echo the next response. Reset after each response.
 let g:intero_echo_next = 0
 
@@ -267,9 +271,20 @@ function! s:on_stdout(jobid, lines, event) abort
         " they're only removed when the line is added to the response.
         if intero#util#strip_control_characters(s:current_line) =~ (g:intero_prompt_regex . '$')
             if len(s:current_response) > 0
-                " Separate the input command from the response
-                let l:cmd = substitute(s:current_response[0], '\m.*' . g:intero_prompt_regex, '', '')
-                call s:new_response(l:cmd, s:current_response[1:])
+                " This means that Intero is now available to run commands
+                if !g:intero_started
+                    echom 'Intero ready'
+                    let g:intero_started = 1
+                    " The first time we receive output we need the first list,
+                    " unlike below (in subsequent callbacks). The
+                    " `on_initial_compile` need the first line to parse the GHCi
+                    " version.
+                    call s:on_initial_compile(s:current_response)
+                else
+                    " Separate the input command from the response
+                    let l:cmd = substitute(s:current_response[0], '\m.*' . g:intero_prompt_regex, '', '')
+                    call s:new_response(l:cmd, s:current_response[1:])
+                endif
             endif
 
             let s:current_response = []
@@ -278,16 +293,34 @@ function! s:on_stdout(jobid, lines, event) abort
     endfor
 endfunction
 
-function! s:new_response(cmd, response) abort
-    let l:initial_compile = 0
+function! s:parse_ghci_version(output) abort
+    for l:l in a:output
+        " Try parsing regular GHCi version.
+        let l:matches = matchlist(l:l, 'GHCi, version \(\d*\)\.\(\d*\).\(\d*\):')
+        if !empty(l:matches)
+            return [l:matches[1] + 0, l:matches[2] + 0, l:matches[3] + 0]
+        else
+            " Fallback to parsing Intero-style version.
+            let l:matches = matchlist(l:l, '(GHC \(\d*\)\.\(\d*\).\(\d*\))')
+            if !empty(l:matches)
+                return [l:matches[1] + 0, l:matches[2] + 0, l:matches[3] + 0]
+            endif
+        endif
+    endfor
 
-    " This means that Intero is now available to run commands
-    if !g:intero_started
-        echom 'Intero ready'
-        let g:intero_started = 1
-        let l:initial_compile = 1
+    return g:no_version
+endfunction
+
+function! s:on_initial_compile(output) abort
+    if g:intero_ghci_version == [0, 0, 0]
+        let g:intero_ghci_version = s:parse_ghci_version(a:output)
     endif
 
+    " Trigger Neomake's parsing of the compilation errors
+    call intero#maker#write_update(a:output)
+endfunction
+
+function! s:new_response(cmd, response) abort
     " For debugging
     let g:intero_response = a:response
 
@@ -297,7 +330,7 @@ function! s:new_response(cmd, response) abort
         let g:intero_echo_next = 0
     endif
 
-    if(l:initial_compile || a:cmd =~# ':reload')
+    if a:cmd =~# ':reload'
         " Trigger Neomake's parsing of the compilation errors
         call intero#maker#write_update(a:response)
     endif
