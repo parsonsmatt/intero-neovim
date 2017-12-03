@@ -44,6 +44,12 @@ function! intero#repl#load_current_file() abort
     endif
 endfunction
 
+function! s:supports_type_at() abort
+    let [l:major, l:minor, l:patch] = g:intero_ghci_version
+    " >= 8.0.1 supports :type-at
+    return l:major >= 8 && ((l:minor == 0 && l:patch >= 1) || l:minor > 0)
+endfunction
+
 " This function only gets the type of what's under the cursor.
 " For a visual selection, you MUST use the key mapping, not the command.
 function! intero#repl#type(generic) abort
