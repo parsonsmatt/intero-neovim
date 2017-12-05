@@ -26,6 +26,6 @@ function! intero#maker#write_update(lines) abort
 endfunction
 
 function! intero#maker#cleanup() abort
-    call system('rm -f ' . s:log_file)
+    call delete(s:log_file)
 endfunction
 
