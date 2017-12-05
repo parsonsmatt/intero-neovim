@@ -1,0 +1,26 @@
+Execute (is_type_signature works on single-line signature):
+    AssertEqual intero#repl#is_type_signature(["foo :: bar"]), 1
+
+Execute (is_type_signature works on multi-line signature):
+    AssertEqual intero#repl#is_type_signature(["foo", "  ::", "    bar"]), 1
+
+Execute (is_type_signature works on single-line signature):
+    AssertEqual intero#repl#is_type_signature(["foo :: bar"]), 1
+
+Execute (is_type_signature works on multi-line signature):
+    AssertEqual intero#repl#is_type_signature(["foo", "  ::", "    bar"]), 1
+
+Execute (get_type_signature_line_replacement handles top-level definition):
+    AssertEqual intero#repl#get_type_signature_line_replacement("foo = bar", ["foo :: Bar"], 1), ["foo :: Bar", "foo = bar"]
+
+Execute (get_type_signature_line_replacement handles indented definition):
+    AssertEqual intero#repl#get_type_signature_line_replacement("  foo = bar", ["foo :: Bar"], 3), ["  foo :: Bar", "  foo = bar"]
+
+Execute (get_type_signature_line_replacement handles indented definition and multi-line type signature):
+    AssertEqual intero#repl#get_type_signature_line_replacement("  foo = bar", ["foo", "  ::", "    bar"], 3), ["  foo", "    ::", "      bar", "  foo = bar"]
+
+Execute (get_type_signature_line_replacement handles definition on same line as let):
+    AssertEqual intero#repl#get_type_signature_line_replacement("  let foo = bar", ["foo :: Bar"], 7), ["  let foo :: Bar", "      foo = bar"]
+
+Execute (get_type_signature_line_replacement handles definition on same line as where):
+    AssertEqual intero#repl#get_type_signature_line_replacement("  where foo = bar", ["foo :: Bar"], 9), ["  where foo :: Bar", "        foo = bar"]

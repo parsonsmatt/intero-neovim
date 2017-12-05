@@ -155,6 +155,51 @@ function! intero#repl#uses() abort
     endif
 endfunction
 
+function! g:intero#repl#is_type_signature(type_lines) abort
+    " Join everything as one line to avoid multiline search problems.
+    return (join(a:type_lines) =~# ' :: ')
+endfunction
+
+function! g:intero#repl#get_type_signature_line_replacement(existing_line, type_lines, col) abort
+    let l:col_idx = a:col - 1
+    " The indent as a string.
+    let l:indent = repeat(' ', l:col_idx)
+
+    let l:first = a:type_lines[0]
+    " We indent all but the first line of the type signature.
+    let l:indented = []
+    for l:type_line in a:type_lines[1:]
+        call add(l:indented, l:indent . l:type_line)
+    endfor
+
+    " Calculate what to put _before_ and _after_ the inserted type signature.
+    if l:col_idx > 0
+        " When not on the top-level, everything on the same line, up until the
+        " definition, need to be reinserted before the type signature.
+        let l:prefix = a:existing_line[0:(l:col_idx - 1)]
+        " Everything from the definition and to the end of that line needs to
+        " be added after the type signature and indent.
+        let l:suffix = a:existing_line[(l:col_idx):]
+    else
+        " When on the top level, we don't need anything before the type
+        " signature.
+        let l:prefix = ''
+        " And everything on that line should go below the type signature.
+        let l:suffix = a:existing_line
+    endif
+
+    " The replacement lines consists of:
+    "
+    " * The definition line with the prefix (the original indent, if any) and
+    "   the unindented first line of the type signature.
+    " * The indented type signature lines, together with
+    "   the suffix (the original definition line) indented to match the type
+    "   signature.
+    return
+                \ [l:prefix . l:first]
+                \ + l:indented + [l:indent . l:suffix]
+endfunction
+
 """"""""""
 " Private:
 """"""""""
@@ -164,48 +209,19 @@ endfunction
 " (that gets pushed down) the correct number of spaces, to match the type
 " signature.
 function! s:paste_type(type_lines) abort
-    " First, check that the message contains a type signature. Join everything
-    " as one line to avoid multiline search problems.
+    " First, check that the message contains a type signature.
     if (join(a:type_lines) =~# ' :: ')
-        let l:col_idx = s:insert_type_identifier.beg_col - 1
-        let l:line = s:insert_type_identifier.line
-
-        " The indent as a string.
-        let l:indent = repeat(' ', l:col_idx)
-
-        let l:first = a:type_lines[0]
-        " We indent all but the first line of the type signature.
-        let l:indented = []
-        for l:type_line in a:type_lines[1:]
-            call add(l:indented, l:indent . l:type_line)
-        endfor
-
         " The contents of the line where we're going to insert the type signature.
-        let l:old = getline(l:line)
-
-        " Calculate what to put _before_ and _after_ the inserted type signature.
-        if l:col_idx > 0
-            " When not on the top-level, everything on the same line, up until the
-            " definition, need to be reinserted before the type signature.
-            let l:prefix = l:old[0:(l:col_idx - 1)]
-            " Everything from the definition and to the end of that line needs to
-            " be added after the type signature and indent.
-            let l:suffix = l:old[(l:col_idx):]
-        else
-            " When on the top level, we don't need anything before the type
-            " signature.
-            let l:prefix = ''
-            " And everything on that line should go below the type signature.
-            let l:suffix = l:old
-        endif
-
-        " We replace the definition line with the prefix (the original indent,
-        " if any) and the unindented first line of the type signature.
-        call setline(l:line, l:prefix . l:first)
-        " And then we append the indented type signature lines, together with
-        " the suffix (the original definition line) indented to match the type
-        " signatured.
-        call append(l:line, l:indented + [l:indent . l:suffix])
+        let l:existing_line = getline(s:insert_type_identifier.line)
+        " Calculate the replacement lines:
+        let l:replacement = g:intero#repl#get_type_signature_line_replacement(
+                    \ l:existing_line,
+                    \ a:type_lines,
+                    \ s:insert_type_identifier.beg_col)
+        " Perform side-effects, setting the first line, and adding the rest of
+        " them afterwards.
+        call setline(s:insert_type_identifier.line, l:replacement[0])
+        call append(s:insert_type_identifier.line, l:replacement[1:])
     else
         echomsg join(a:type_lines, '\n')
     end
