@@ -7,3 +7,4 @@ stdout.log
 *.egg*
 .cache
 vader.vim
+test/vader.log

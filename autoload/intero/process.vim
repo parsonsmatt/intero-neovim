@@ -18,9 +18,6 @@ let g:intero_started = 0
 " Whether Intero has done its initialization yet
 let s:intero_initialized = 0
 
-" The version of GHCi, parsed on startup.
-let g:intero_ghci_version = g:intero#process#version#no_version
-
 " If true, echo the next response. Reset after each response.
 let g:intero_echo_next = 0
 
@@ -41,7 +38,7 @@ function! intero#process#initialize() abort
         return
     endif
 
-    if(!exists('g:intero_built'))
+    if(!s:uses_custom_ghci() && !exists('g:intero_built'))
         " If `stack` exits with a non-0 exit code, that means it failed to find the executable.
         if (!executable('stack'))
             echom 'Stack is required for Intero. Aborting.'
@@ -110,7 +107,7 @@ function! intero#process#start() abort
 
     call intero#process#initialize()
 
-    if(!exists('g:intero_built') || g:intero_built == 0)
+    if !s:uses_custom_ghci() && (!exists('g:intero_built') || g:intero_built == 0)
         echom 'Intero is still compiling'
         return -1
     endif
@@ -140,6 +137,8 @@ function! intero#process#kill() abort
         " Deleting a terminal buffer implicitly stops the job
         unlet g:intero_job_id
     endif
+
+    unlet g:intero_backend_info
 
     let g:intero_started = 0
 endfunction
@@ -184,6 +183,10 @@ function! intero#process#restart() abort
 endfunction
 
 function! intero#process#restart_with_targets(...) abort
+    if s:uses_custom_ghci()
+        throw 'Targets is not supported when using a custom GHCi command.'
+    end
+
     if a:0 == 0
         let l:targets = intero#targets#prompt_for_targets()
     else
@@ -196,6 +199,10 @@ endfunction
 """"""""""
 " Private:
 """"""""""
+
+function! s:uses_custom_ghci() abort
+    return exists('g:intero_ghci_command')
+endfunction
 
 function! s:start_compile(height, opts) abort
     " Starts an Intero compiling in a split below the current buffer.
@@ -217,23 +224,36 @@ function! s:start_compile(height, opts) abort
 endfunction
 
 function! s:start_buffer(height) abort
-    " Starts an Intero REPL in a split below the current buffer. Returns the
-    " ID of the buffer.
+    " Starts an Intero or GHCi REPL in a split below the current buffer. Returns
+    " the ID of the buffer.
     exe 'below ' . a:height . ' split'
 
-    let l:invocation = 'ghci --with-ghc intero'
-    if exists('g:intero_ghci_options')
-      let l:invocation .= ' --ghci-options="' . g:intero_ghci_options . '"'
+    let l:terminal_options = {
+                \ 'on_stdout': function('s:on_stdout'),
+                \ }
+
+    if s:uses_custom_ghci()
+        " Override to use a custom GHCi command.
+        let l:terminal_command = g:intero_ghci_command
+    else
+        " Use the default Intero invocation.
+        let l:terminal_ghci_options = []
+        if exists('g:intero_ghci_options')
+            let l:terminal_ghci_options = ['--ghci-options="' . g:intero_ghci_options .'"']
+        endif
+        let l:terminal_command = join([
+                    \ 'stack',
+                    \ intero#util#stack_opts(),
+                    \ 'ghci',
+                    \ '--with-ghc intero'] +
+                    \ l:terminal_ghci_options +
+                    \ [intero#util#stack_build_opts()]
+                    \ , ' ')
+        let l:terminal_options.cwd = fnamemodify(g:intero_stack_yaml, ':p:h')
     endif
 
     enew
-    silent call termopen('stack '
-        \ . intero#util#stack_opts() . ' '
-        \ . l:invocation . ' '
-        \ . intero#util#stack_build_opts(), {
-                \ 'on_stdout': function('s:on_stdout'),
-                \ 'cwd': fnamemodify(g:intero_stack_yaml, ':p:h')
-                \ })
+    silent call termopen(l:terminal_command, l:terminal_options)
 
     silent file Intero
     set bufhidden=hide
@@ -293,8 +313,11 @@ function! s:on_stdout(jobid, lines, event) abort
 endfunction
 
 function! s:on_initial_compile(output) abort
-    if g:intero_ghci_version == g:intero#process#version#no_version
-        let g:intero_ghci_version = g:intero#process#version#parse_lines(a:output)
+    if !exists('g:intero_backend_info')
+        let l:result = g:intero#process#backend_info#parse_lines(a:output)
+        if !empty(l:result)
+            let g:intero_backend_info = l:result
+        endif
     endif
 
     " Trigger Neomake's parsing of the compilation errors
