@@ -1,0 +1,16 @@
+Execute (parse_lines handles GHCi output):
+    AssertEqual intero#process#version#parse_lines([ "GHCi, version 8.2.1: http://www.haskell.org/ghc/  :? for help",
+                                                   \ "Loaded GHCi configuration from /home/user/.ghci",
+                                                   \ "Prelude>"]), ["ghci", 8, 2, 1]
+
+Execute (parse_lines handles older GHCi output):
+    AssertEqual intero#process#version#parse_lines([ "   ___         ___ _",
+                                                   \ "  / _ \ /\  /\/ __(_)",
+                                                   \ " / /_\// /_/ / /  | |      GHC Interactive, version 6.0.1, for Haskell 98.",
+                                                   \ "/ /_\\/ __  / /___| |      http://www.haskell.org/ghc/",
+                                                   \ "\____/\/ /_/\____/|_|      Type :? for help."]), ["ghci", 6, 0, 1]
+
+Execute (parse_lines handles Intero output):
+    AssertEqual intero#process#version#parse_lines([ "Intero 0.1.21 (GHC 8.0.2)",
+                                                   \ "Type :intro and press enter for an introduction of the standard commands.",
+                                                   \ "Prelude>"]), ["intero", 8, 0, 2]

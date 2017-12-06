@@ -18,9 +18,8 @@ let g:intero_started = 0
 " Whether Intero has done its initialization yet
 let s:intero_initialized = 0
 
-let s:no_version = [0, 0, 0]
 " The version of GHCi, parsed on startup.
-let g:intero_ghci_version = s:no_version
+let g:intero_ghci_version = g:intero#process#version#no_version
 
 " If true, echo the next response. Reset after each response.
 let g:intero_echo_next = 0
@@ -293,27 +292,9 @@ function! s:on_stdout(jobid, lines, event) abort
     endfor
 endfunction
 
-function! s:parse_ghci_version(output) abort
-    for l:l in a:output
-        " Try parsing regular GHCi version.
-        let l:matches = matchlist(l:l, 'GHCi, version \(\d*\)\.\(\d*\).\(\d*\):')
-        if !empty(l:matches)
-            return [l:matches[1] + 0, l:matches[2] + 0, l:matches[3] + 0]
-        else
-            " Fallback to parsing Intero-style version.
-            let l:matches = matchlist(l:l, '(GHC \(\d*\)\.\(\d*\).\(\d*\))')
-            if !empty(l:matches)
-                return [l:matches[1] + 0, l:matches[2] + 0, l:matches[3] + 0]
-            endif
-        endif
-    endfor
-
-    return g:no_version
-endfunction
-
 function! s:on_initial_compile(output) abort
-    if g:intero_ghci_version == [0, 0, 0]
-        let g:intero_ghci_version = s:parse_ghci_version(a:output)
+    if g:intero_ghci_version == g:intero#process#version#no_version
+        let g:intero_ghci_version = g:intero#process#version#parse_lines(a:output)
     endif
 
     " Trigger Neomake's parsing of the compilation errors

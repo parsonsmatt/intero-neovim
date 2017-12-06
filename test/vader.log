@@ -1,0 +1,782 @@
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 13 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/1) [EXECUTE] parse_lines handles GHCi output
+    (1/1) [EXECUTE] (X) type mismatch: ['ghci', 8, 2, 1] (List) should be equal to 0 (Number)
+  Success/Total: 0/1
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 12/13 (assertions: 12/13)
+Elapsed time: 0.113911 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 13 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/1) [EXECUTE] parse_lines handles GHCi output
+  Success/Total: 1/1
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 13/13 (assertions: 13/13)
+Elapsed time: 0.114341 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 13 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/1) [EXECUTE] parse_lines handles GHCi output
+    (1/1) [EXECUTE] (X) Unequal Lists
+      ['ghci', 8, 2, 2] should be equal to 
+      ['ghci', 8, 2, 1]
+  Success/Total: 0/1
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 12/13 (assertions: 12/13)
+Elapsed time: 0.125427 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 13 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/1) [EXECUTE] parse_lines handles GHCi output
+    (1/1) [EXECUTE] (X) Unequal Lists
+      ['ghci', 8, 2, 2] should be equal to 
+      ['ghci', 8, 2, 1]
+  Success/Total: 0/1
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 12/13 (assertions: 12/13)
+Elapsed time: 0.110828 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 13 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/1) [EXECUTE] parse_lines handles GHCi output
+  Success/Total: 1/1
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 13/13 (assertions: 13/13)
+Elapsed time: 0.110432 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 5, 0, 4] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 2/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 14/15 (assertions: 14/15)
+Elapsed time: 0.122365 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 2/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 14/15 (assertions: 14/15)
+Elapsed time: 0.123782 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (1/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 8, 2, 1] should be equal to 
+      ['', 0, 0, 0]
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 1/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 13/15 (assertions: 13/15)
+Elapsed time: 0.121859 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (1/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 8, 2, 1] should be equal to 
+      ['', 0, 0, 0]
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 1/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 13/15 (assertions: 13/15)
+Elapsed time: 0.119373 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (1/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 8, 2, 1] should be equal to 
+      ['', 0, 0, 0]
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 1/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 13/15 (assertions: 13/15)
+Elapsed time: 0.128234 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (1/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 8, 2, 1] should be equal to 
+      ['', 0, 0, 0]
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 1/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 13/15 (assertions: 13/15)
+Elapsed time: 0.118535 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 2/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 14/15 (assertions: 14/15)
+Elapsed time: 0.123967 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (1/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 8, 2, 1] should be equal to 
+      ['', 0, 0, 0]
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 1/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 13/15 (assertions: 13/15)
+Elapsed time: 0.133244 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (1/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 8, 2, 1] should be equal to 
+      ['', 0, 0, 0]
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 1/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 13/15 (assertions: 13/15)
+Elapsed time: 0.118265 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (1/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 8, 2, 1] should be equal to 
+      ['ghci', 0, 8, 2]
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 1/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 13/15 (assertions: 13/15)
+Elapsed time: 0.119801 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (1/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 8, 2, 1] should be equal to 
+      ['', 0, 0, 0]
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 1/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 13/15 (assertions: 13/15)
+Elapsed time: 0.117935 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 2/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 14/15 (assertions: 14/15)
+Elapsed time: 0.112447 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (2/3) [EXECUTE] (X) Unequal Lists
+      ['ghci', 6, 0, 1] should be equal to 
+      ['', 0, 0, 0]
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 2/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 14/15 (assertions: 14/15)
+Elapsed time: 0.110776 sec.
+NVIM v0.2.3-24-gd9b3ebfed
+Build type: RelWithDebInfo
+LuaJIT 2.0.5
+Compilation: /usr/bin/gcc-5 -Wconversion -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DNVIM_MSGPACK_HAS_FLOAT32 -DNVIM_UNIBI_HAS_VAR_FROM -O2 -g -DMIN_LOG_LEVEL=3 -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wvla -fstack-protector-strong -fdiagnostics-color=auto -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/home/travis/build/neovim/bot-ci/build/neovim/build/config -I/home/travis/build/neovim/bot-ci/build/neovim/src -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/.deps/usr/include -I/usr/include -I/home/travis/build/neovim/bot-ci/build/neovim/build/src/nvim/auto -I/home/travis/build/neovim/bot-ci/build/neovim/build/include
+Compiled by travis@travis-job-92da6f5f-60e3-499f-ad8e-4d51a1d81045
+
+Features: +acl +iconv +jemalloc +tui 
+See ":help feature-compile"
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/home/travis/build/neovim/bot-ci/build/neovim/build/nvim.AppDir/usr/share/nvim"
+
+Run :checkhealth for more info
+
+Starting Vader: 3 suite(s), 15 case(s)
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/process/version.vader
+    (1/3) [EXECUTE] parse_lines handles GHCi output
+    (2/3) [EXECUTE] parse_lines handles older GHCi output
+    (3/3) [EXECUTE] parse_lines handles Intero output
+  Success/Total: 3/3
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/repl.vader
+    (1/9) [EXECUTE] is_type_signature works on single-line signature
+    (2/9) [EXECUTE] is_type_signature works on multi-line signature
+    (3/9) [EXECUTE] is_type_signature works on single-line signature
+    (4/9) [EXECUTE] is_type_signature works on multi-line signature
+    (5/9) [EXECUTE] get_type_signature_line_replacement handles top-level definition
+    (6/9) [EXECUTE] get_type_signature_line_replacement handles indented definition
+    (7/9) [EXECUTE] get_type_signature_line_replacement handles indented definition and multi-line type signature
+    (8/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as let
+    (9/9) [EXECUTE] get_type_signature_line_replacement handles definition on same line as where
+  Success/Total: 9/9
+  Starting Vader: /home/owi/projects/vim/intero-neovim/test/intero/util.vader
+    (1/3) [EXECUTE] strip_control_characters removes 256-bit color codes
+    (2/3) [EXECUTE] strip_control_characters removes ANSI color codes
+    (3/3) [EXECUTE] strip_control_characters xterm code
+  Success/Total: 3/3
+Success/Total: 15/15 (assertions: 15/15)
+Elapsed time: 0.132683 sec.
