@@ -38,63 +38,8 @@ function! intero#process#initialize() abort
         return
     endif
 
-    if(!s:uses_custom_ghci() && !exists('g:intero_built'))
-        " If `stack` exits with a non-0 exit code, that means it failed to find the executable.
-        if (!executable('stack'))
-            echom 'Stack is required for Intero. Aborting.'
-            return
-        endif
-
-        " We haven't set the stack-root yet, so we shouldn't be able to find this yet.
-        if (executable('intero'))
-            echom 'Intero is installed in your PATH, which may cause problems when using different resolvers.'
-            echom 'This usually happens if you run `stack install intero` instead of `stack build intero`.'
-            echom 'Aborting.'
-            return
-        endif
-
-        if g:intero_use_neomake && !exists(':Neomake')
-            echom 'Neomake not detected. Flychecking will be disabled.'
-        endif
-
-        " Find stack.yaml
-        if (!exists('g:intero_stack_yaml'))
-            " If there's a STACK_YAML environment variable, try to interpret
-            " that.
-            let l:should_cd_to_current_file = empty($STACK_YAML)
-            if l:should_cd_to_current_file
-                " there's no stack yaml env variable, so we can just let stack
-                " figure it out.  Change dir temporarily and see if stack can
-                " find a config
-                silent! lcd %:p:h
-            endif
-
-            " if there's an environment variable, we assume it works
-            " relative to where neovim was started.
-            let l:stack_path_config = systemlist('stack path --config-location')
-            call filter(l:stack_path_config, "v:val =~? '^.*\.yaml'")
-            if empty(l:stack_path_config)
-                echomsg 'Failed to identify a stack.yaml. Does it exist?'
-            else
-                let g:intero_stack_yaml = l:stack_path_config[0]
-            endif
-
-            if l:should_cd_to_current_file
-                silent! lcd -
-            endif
-        endif
-
-        " Ensure that intero is compiled
-        " TODO: Verify that we have a version of intero that the plugin can work with.
-        let l:version = system('stack ' . intero#util#stack_opts() . ' exec --verbosity silent -- intero --version')
-        if v:shell_error
-            let g:intero_built = 0
-            echom 'Intero not installed.'
-            let l:opts = { 'on_exit': function('s:build_complete') }
-            call s:start_compile(10, l:opts)
-        else
-            let g:intero_built = 1
-        endif
+    if(!s:uses_custom_ghci())
+        call s:ensure_intero_is_installed()
     endif
 
     let s:intero_initialized = 1
@@ -378,5 +323,68 @@ function! s:build_complete(job_id, data, event) abort
         else
             echom 'Intero failed to compile.'
         endif
+    endif
+endfunction
+
+function! s:ensure_intero_is_installed() abort
+    if exists('g:intero_built')
+        return
+    endif
+
+    " If `stack` exits with a non-0 exit code, that means it failed to find the executable.
+    if (!executable('stack'))
+        echom 'Stack is required for Intero. Aborting.'
+        return
+    endif
+
+    " We haven't set the stack-root yet, so we shouldn't be able to find this yet.
+    if (executable('intero'))
+        echom 'Intero is installed in your PATH, which may cause problems when using different resolvers.'
+        echom 'This usually happens if you run `stack install intero` instead of `stack build intero`.'
+        echom 'Aborting.'
+        return
+    endif
+
+    if g:intero_use_neomake && !exists(':Neomake')
+        echom 'Neomake not detected. Flychecking will be disabled.'
+    endif
+
+    " Find stack.yaml
+    if (!exists('g:intero_stack_yaml'))
+        " If there's a STACK_YAML environment variable, try to interpret
+        " that.
+        let l:should_cd_to_current_file = empty($STACK_YAML)
+        if l:should_cd_to_current_file
+            " there's no stack yaml env variable, so we can just let stack
+            " figure it out.  Change dir temporarily and see if stack can
+            " find a config
+            silent! lcd %:p:h
+        endif
+
+        " if there's an environment variable, we assume it works
+        " relative to where neovim was started.
+        let l:stack_path_config = systemlist('stack path --config-location')
+        call filter(l:stack_path_config, "v:val =~? '^.*\.yaml'")
+        if empty(l:stack_path_config)
+            echomsg 'Failed to identify a stack.yaml. Does it exist?'
+        else
+            let g:intero_stack_yaml = l:stack_path_config[0]
+        endif
+
+        if l:should_cd_to_current_file
+            silent! lcd -
+        endif
+    endif
+
+    " Ensure that intero is compiled
+    " TODO: Verify that we have a version of intero that the plugin can work with.
+    let l:version = system('stack ' . intero#util#stack_opts() . ' exec --verbosity silent -- intero --version')
+    if v:shell_error
+        let g:intero_built = 0
+        echom 'Intero not installed.'
+        let l:opts = { 'on_exit': function('s:build_complete') }
+        call s:start_compile(10, l:opts)
+    else
+        let g:intero_built = 1
     endif
 endfunction
