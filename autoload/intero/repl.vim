@@ -125,7 +125,6 @@ function! intero#repl#insert_type() abort
     else
         " for callback to add correct indent:
         let s:insert_type_identifier = intero#loc#get_identifier_information()
-        echo s:insert_type_identifier
 
         call intero#process#add_handler(function('s:paste_type'))
         call intero#repl#send(intero#util#make_command(':type-at'))
