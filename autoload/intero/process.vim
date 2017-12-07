@@ -173,32 +173,9 @@ function! s:start_buffer(height) abort
     " the ID of the buffer.
     exe 'below ' . a:height . ' split'
 
-    let l:terminal_options = {
-                \ 'on_stdout': function('s:on_stdout'),
-                \ }
-
-    if s:uses_custom_ghci()
-        " Override to use a custom GHCi command.
-        let l:terminal_command = g:intero_ghci_command
-    else
-        " Use the default Intero invocation.
-        let l:terminal_ghci_options = []
-        if exists('g:intero_ghci_options')
-            let l:terminal_ghci_options = ['--ghci-options="' . g:intero_ghci_options .'"']
-        endif
-        let l:terminal_command = join([
-                    \ 'stack',
-                    \ intero#util#stack_opts(),
-                    \ 'ghci',
-                    \ '--with-ghc intero'] +
-                    \ l:terminal_ghci_options +
-                    \ [intero#util#stack_build_opts()]
-                    \ , ' ')
-        let l:terminal_options.cwd = fnamemodify(g:intero_stack_yaml, ':p:h')
-    endif
-
+    let l:invocation = s:build_terminal_invocation()
     enew
-    silent call termopen(l:terminal_command, l:terminal_options)
+    silent call termopen(l:invocation.command, l:invocation.options)
 
     silent file Intero
     set bufhidden=hide
@@ -387,4 +364,32 @@ function! s:ensure_intero_is_installed() abort
     else
         let g:intero_built = 1
     endif
+endfunction
+
+function! s:build_terminal_invocation() abort
+    let l:terminal_options = {
+                \ 'on_stdout': function('s:on_stdout'),
+                \ }
+
+    if s:uses_custom_ghci()
+        " Override to use a custom GHCi command.
+        let l:terminal_command = g:intero_ghci_command
+    else
+        " Use the default Intero invocation.
+        let l:terminal_ghci_options = []
+        if exists('g:intero_ghci_options')
+            let l:terminal_ghci_options = ['--ghci-options="' . g:intero_ghci_options .'"']
+        endif
+        let l:terminal_command = join([
+                    \ 'stack',
+                    \ intero#util#stack_opts(),
+                    \ 'ghci',
+                    \ '--with-ghc intero'] +
+                    \ l:terminal_ghci_options +
+                    \ [intero#util#stack_build_opts()]
+                    \ , ' ')
+        let l:terminal_options.cwd = fnamemodify(g:intero_stack_yaml, ':p:h')
+    endif
+
+    return { 'command': l:terminal_command, 'options': l:terminal_options }
 endfunction
