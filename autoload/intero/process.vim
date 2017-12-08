@@ -83,7 +83,9 @@ function! intero#process#kill() abort
         unlet g:intero_job_id
     endif
 
-    unlet g:intero_backend_info
+    if exists('g:intero_backend_info')
+        unlet g:intero_backend_info
+    endif
 
     let g:intero_started = 0
 endfunction
@@ -214,13 +216,13 @@ function! s:on_stdout(jobid, lines, event) abort
             if len(s:current_response) > 0
                 " This means that Intero is now available to run commands
                 if !g:intero_started
-                    echom 'Intero ready'
-                    let g:intero_started = 1
-                    " The first time we receive output we need the first list,
+                    " The first time we receive output we need the first line,
                     " unlike below (in subsequent callbacks). The
-                    " `on_initial_compile` need the first line to parse the GHCi
+                    " `on_initial_compile` needs the first line to parse the GHCi
                     " version.
                     call s:on_initial_compile(s:current_response)
+                    let g:intero_started = 1
+                    echom 'Intero ready'
                 else
                     " Separate the input command from the response
                     let l:cmd = substitute(s:current_response[0], '\m.*' . g:intero_prompt_regex, '', '')
@@ -235,11 +237,11 @@ function! s:on_stdout(jobid, lines, event) abort
 endfunction
 
 function! s:on_initial_compile(output) abort
-    if !exists('g:intero_backend_info')
-        let l:result = g:intero#process#backend_info#parse_lines(a:output)
-        if !empty(l:result)
-            let g:intero_backend_info = l:result
-        endif
+    let l:result = g:intero#process#backend_info#parse_lines(a:output)
+    if !empty(l:result)
+        let g:intero_backend_info = l:result
+    else
+        throw 'Failed to parse the GHCi/Intero version from REPL output!'
     endif
 
     " Trigger Neomake's parsing of the compilation errors

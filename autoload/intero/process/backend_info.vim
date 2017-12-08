@@ -13,29 +13,26 @@ function! intero#process#backend_info#backend_info(backend, major, minor, patch)
     return {'backend': a:backend, 'version': l:version}
 endfunction
 
+let s:backend_regexps = [
+            \ ['ghci',  'GHC\%(i\|\sInteractive\), version \(\d*\)\.\(\d*\).\(\d*\)[:,]'],
+            \ ['intero', 'Intero .* (GHC \(\d*\)\.\(\d*\).\(\d*\))']
+            \ ]
+
 " Tries to parse the backend info from a list of lines. Returns a dict with
 " backend info if successful, otherwise an empty dict.
 function! intero#process#backend_info#parse_lines(output) abort
     for l:l in a:output
-        " Try parsing regular GHCi version.
-        let l:matches = matchlist(l:l, 'GHC\%(i\|\sInteractive\), version \(\d*\)\.\(\d*\).\(\d*\)[:,]')
-        if !empty(l:matches)
-            return intero#process#backend_info#backend_info(
-                        \ 'ghci',
-                        \ l:matches[1],
-                        \ l:matches[2],
-                        \ l:matches[3])
-        else
-            " Fallback to parsing Intero-style version.
-            let l:matches = matchlist(l:l, 'Intero .* (GHC \(\d*\)\.\(\d*\).\(\d*\))')
+        " Try parsing the line with each backend/regexp pair available.
+        for [l:backend, l:regexp] in s:backend_regexps
+            let l:matches = matchlist(l:l, l:regexp)
             if !empty(l:matches)
                 return intero#process#backend_info#backend_info(
-                            \ 'intero',
+                            \ l:backend,
                             \ l:matches[1],
                             \ l:matches[2],
                             \ l:matches[3])
             endif
-        endif
+        endfor
     endfor
 
     return {}
