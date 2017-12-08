@@ -57,6 +57,15 @@ function! intero#repl#type(generic) abort
     call intero#repl#type_at(a:generic, l:l, l:c, l:l, l:c)
 endfunction
 
+" Gets the type at the given location, specified by:
+"
+" * `l1`: start line
+" * `c1`: start column
+" * `l2`: end line
+" * `c2`: end column
+"
+" The `generic` argument specifies if this should return the
+" generic or specialized type.
 function! intero#repl#type_at(generic, l1, c1, l2, c2) abort
     let l:info = intero#loc#get_identifier_information()
 
