@@ -38,6 +38,10 @@ function! intero#process#initialize() abort
         return
     endif
 
+    if g:intero_use_neomake && !exists(':Neomake')
+        echom 'Neomake not detected. Flychecking will be disabled.'
+    endif
+
     if(!s:uses_custom_ghci())
         call s:ensure_intero_is_installed()
     endif
@@ -322,10 +326,6 @@ function! s:ensure_intero_is_installed() abort
         echom 'This usually happens if you run `stack install intero` instead of `stack build intero`.'
         echom 'Aborting.'
         return
-    endif
-
-    if g:intero_use_neomake && !exists(':Neomake')
-        echom 'Neomake not detected. Flychecking will be disabled.'
     endif
 
     " Find stack.yaml
