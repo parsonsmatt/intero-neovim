@@ -42,7 +42,7 @@ function! intero#process#initialize() abort
         echom 'Neomake not detected. Flychecking will be disabled.'
     endif
 
-    if(!s:uses_custom_ghci())
+    if(!s:uses_custom_backend())
         call s:ensure_intero_is_installed()
     endif
 
@@ -56,7 +56,7 @@ function! intero#process#start() abort
 
     call intero#process#initialize()
 
-    if !s:uses_custom_ghci() && (!exists('g:intero_built') || g:intero_built == 0)
+    if !s:uses_custom_backend() && (!exists('g:intero_built') || g:intero_built == 0)
         echom 'Intero is still compiling'
         return -1
     endif
@@ -134,8 +134,8 @@ function! intero#process#restart() abort
 endfunction
 
 function! intero#process#restart_with_targets(...) abort
-    if s:uses_custom_ghci()
-        throw 'Targets is not supported when using a custom GHCi command.'
+    if s:uses_custom_backend()
+        throw 'Selecting targets is not supported when using a custom GHCi backend.'
     end
 
     if a:0 == 0
@@ -151,8 +151,8 @@ endfunction
 " Private:
 """"""""""
 
-function! s:uses_custom_ghci() abort
-    return exists('g:intero_ghci_command')
+function! s:uses_custom_backend() abort
+    return exists('g:intero_backend')
 endfunction
 
 function! s:start_compile(height, opts) abort
@@ -373,9 +373,17 @@ function! s:build_terminal_invocation() abort
                 \ 'on_stdout': function('s:on_stdout'),
                 \ }
 
-    if s:uses_custom_ghci()
-        " Override to use a custom GHCi command.
-        let l:terminal_command = g:intero_ghci_command
+    if s:uses_custom_backend()
+        " Override to use a custom GHCi backend.
+        let l:terminal_command = g:intero_backend.command
+        " Add options if set.
+        if has_key(g:intero_backend, 'options')
+            let l:terminal_command .= ' ' . g:intero_backend.options
+        endif
+        " Use user-specified cwd if set.
+        if has_key(g:intero_backend, 'cwd')
+            let l:terminal_options.cwd = g:intero_backend.cwd
+        endif
     else
         " Use the default Intero invocation.
         let l:terminal_ghci_options = []
