@@ -106,8 +106,7 @@ function! intero#repl#send(str) abort
         echomsg 'Intero not running.'
         return
     endif
-    call jobsend(g:intero_job_id, ["\<C-c>", ''])
-    call jobsend(g:intero_job_id, add([a:str], ''))
+    call jobsend(g:intero_job_id, ["\<C-c>", a:str, ''])
 endfunction
 
 function! intero#repl#insert_type() abort
