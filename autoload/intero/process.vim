@@ -18,10 +18,6 @@ let g:intero_started = 0
 " Whether Intero has done its initialization yet
 let s:intero_initialized = 0
 
-let s:no_version = [0, 0, 0]
-" The version of GHCi, parsed on startup.
-let g:intero_ghci_version = s:no_version
-
 " If true, echo the next response. Reset after each response.
 let g:intero_echo_next = 0
 
@@ -42,63 +38,12 @@ function! intero#process#initialize() abort
         return
     endif
 
-    if(!exists('g:intero_built'))
-        " If `stack` exits with a non-0 exit code, that means it failed to find the executable.
-        if (!executable('stack'))
-            echom 'Stack is required for Intero. Aborting.'
-            return
-        endif
+    if g:intero_use_neomake && !exists(':Neomake')
+        echom 'Neomake not detected. Flychecking will be disabled.'
+    endif
 
-        " We haven't set the stack-root yet, so we shouldn't be able to find this yet.
-        if (executable('intero'))
-            echom 'Intero is installed in your PATH, which may cause problems when using different resolvers.'
-            echom 'This usually happens if you run `stack install intero` instead of `stack build intero`.'
-            echom 'Aborting.'
-            return
-        endif
-
-        if g:intero_use_neomake && !exists(':Neomake')
-            echom 'Neomake not detected. Flychecking will be disabled.'
-        endif
-
-        " Find stack.yaml
-        if (!exists('g:intero_stack_yaml'))
-            " If there's a STACK_YAML environment variable, try to interpret
-            " that.
-            let l:should_cd_to_current_file = empty($STACK_YAML)
-            if l:should_cd_to_current_file
-                " there's no stack yaml env variable, so we can just let stack
-                " figure it out.  Change dir temporarily and see if stack can
-                " find a config
-                silent! lcd %:p:h
-            endif
-
-            " if there's an environment variable, we assume it works
-            " relative to where neovim was started.
-            let l:stack_path_config = systemlist('stack path --config-location')
-            call filter(l:stack_path_config, "v:val =~? '^.*\.yaml'")
-            if empty(l:stack_path_config)
-                echomsg 'Failed to identify a stack.yaml. Does it exist?'
-            else
-                let g:intero_stack_yaml = l:stack_path_config[0]
-            endif
-
-            if l:should_cd_to_current_file
-                silent! lcd -
-            endif
-        endif
-
-        " Ensure that intero is compiled
-        " TODO: Verify that we have a version of intero that the plugin can work with.
-        let l:version = system('stack ' . intero#util#stack_opts() . ' exec --verbosity silent -- intero --version')
-        if v:shell_error
-            let g:intero_built = 0
-            echom 'Intero not installed.'
-            let l:opts = { 'on_exit': function('s:build_complete') }
-            call s:start_compile(10, l:opts)
-        else
-            let g:intero_built = 1
-        endif
+    if(!s:uses_custom_backend())
+        call s:ensure_intero_is_installed()
     endif
 
     let s:intero_initialized = 1
@@ -111,7 +56,7 @@ function! intero#process#start() abort
 
     call intero#process#initialize()
 
-    if(!exists('g:intero_built') || g:intero_built == 0)
+    if !s:uses_custom_backend() && (!exists('g:intero_built') || g:intero_built == 0)
         echom 'Intero is still compiling'
         return -1
     endif
@@ -140,6 +85,10 @@ function! intero#process#kill() abort
         unlet g:intero_buffer_id
         " Deleting a terminal buffer implicitly stops the job
         unlet g:intero_job_id
+    endif
+
+    if exists('g:intero_backend_info')
+        unlet g:intero_backend_info
     endif
 
     let g:intero_started = 0
@@ -185,6 +134,10 @@ function! intero#process#restart() abort
 endfunction
 
 function! intero#process#restart_with_targets(...) abort
+    if s:uses_custom_backend()
+        throw 'Selecting targets is not supported when using a custom GHCi backend.'
+    end
+
     if a:0 == 0
         let l:targets = intero#targets#prompt_for_targets()
     else
@@ -197,6 +150,10 @@ endfunction
 """"""""""
 " Private:
 """"""""""
+
+function! s:uses_custom_backend() abort
+    return exists('g:intero_backend')
+endfunction
 
 function! s:start_compile(height, opts) abort
     " Starts an Intero compiling in a split below the current buffer.
@@ -218,23 +175,13 @@ function! s:start_compile(height, opts) abort
 endfunction
 
 function! s:start_buffer(height) abort
-    " Starts an Intero REPL in a split below the current buffer. Returns the
-    " ID of the buffer.
+    " Starts an Intero or GHCi REPL in a split below the current buffer. Returns
+    " the ID of the buffer.
     exe 'below ' . a:height . ' split'
 
-    let l:invocation = 'ghci --with-ghc intero'
-    if exists('g:intero_ghci_options')
-      let l:invocation .= ' --ghci-options="' . g:intero_ghci_options . '"'
-    endif
-
+    let l:invocation = s:build_terminal_invocation()
     enew
-    silent call termopen('stack '
-        \ . intero#util#stack_opts() . ' '
-        \ . l:invocation . ' '
-        \ . intero#util#stack_build_opts(), {
-                \ 'on_stdout': function('s:on_stdout'),
-                \ 'cwd': fnamemodify(g:intero_stack_yaml, ':p:h')
-                \ })
+    silent call termopen(l:invocation.command, l:invocation.options)
 
     silent file Intero
     set bufhidden=hide
@@ -273,13 +220,13 @@ function! s:on_stdout(jobid, lines, event) abort
             if len(s:current_response) > 0
                 " This means that Intero is now available to run commands
                 if !g:intero_started
-                    echom 'Intero ready'
-                    let g:intero_started = 1
-                    " The first time we receive output we need the first list,
+                    " The first time we receive output we need the first line,
                     " unlike below (in subsequent callbacks). The
-                    " `on_initial_compile` need the first line to parse the GHCi
+                    " `on_initial_compile` needs the first line to parse the GHCi
                     " version.
                     call s:on_initial_compile(s:current_response)
+                    let g:intero_started = 1
+                    echom 'Intero ready'
                 else
                     " Separate the input command from the response
                     let l:cmd = substitute(s:current_response[0], '\m.*' . g:intero_prompt_regex, '', '')
@@ -293,27 +240,12 @@ function! s:on_stdout(jobid, lines, event) abort
     endfor
 endfunction
 
-function! s:parse_ghci_version(output) abort
-    for l:l in a:output
-        " Try parsing regular GHCi version.
-        let l:matches = matchlist(l:l, 'GHCi, version \(\d*\)\.\(\d*\).\(\d*\):')
-        if !empty(l:matches)
-            return [l:matches[1] + 0, l:matches[2] + 0, l:matches[3] + 0]
-        else
-            " Fallback to parsing Intero-style version.
-            let l:matches = matchlist(l:l, '(GHC \(\d*\)\.\(\d*\).\(\d*\))')
-            if !empty(l:matches)
-                return [l:matches[1] + 0, l:matches[2] + 0, l:matches[3] + 0]
-            endif
-        endif
-    endfor
-
-    return g:no_version
-endfunction
-
 function! s:on_initial_compile(output) abort
-    if g:intero_ghci_version == [0, 0, 0]
-        let g:intero_ghci_version = s:parse_ghci_version(a:output)
+    let l:result = g:intero#process#backend_info#parse_lines(a:output)
+    if !empty(l:result)
+        let g:intero_backend_info = l:result
+    else
+        throw 'Failed to parse the GHCi/Intero version from REPL output!'
     endif
 
     " Trigger Neomake's parsing of the compilation errors
@@ -375,4 +307,99 @@ function! s:build_complete(job_id, data, event) abort
             echom 'Intero failed to compile.'
         endif
     endif
+endfunction
+
+function! s:ensure_intero_is_installed() abort
+    if exists('g:intero_built')
+        return
+    endif
+
+    " If `stack` exits with a non-0 exit code, that means it failed to find the executable.
+    if (!executable('stack'))
+        echom 'Stack is required for Intero. Aborting.'
+        return
+    endif
+
+    " We haven't set the stack-root yet, so we shouldn't be able to find this yet.
+    if (executable('intero'))
+        echom 'Intero is installed in your PATH, which may cause problems when using different resolvers.'
+        echom 'This usually happens if you run `stack install intero` instead of `stack build intero`.'
+        echom 'Aborting.'
+        return
+    endif
+
+    " Find stack.yaml
+    if (!exists('g:intero_stack_yaml'))
+        " If there's a STACK_YAML environment variable, try to interpret
+        " that.
+        let l:should_cd_to_current_file = empty($STACK_YAML)
+        if l:should_cd_to_current_file
+            " there's no stack yaml env variable, so we can just let stack
+            " figure it out.  Change dir temporarily and see if stack can
+            " find a config
+            silent! lcd %:p:h
+        endif
+
+        " if there's an environment variable, we assume it works
+        " relative to where neovim was started.
+        let l:stack_path_config = systemlist('stack path --config-location')
+        call filter(l:stack_path_config, "v:val =~? '^.*\.yaml'")
+        if empty(l:stack_path_config)
+            echomsg 'Failed to identify a stack.yaml. Does it exist?'
+        else
+            let g:intero_stack_yaml = l:stack_path_config[0]
+        endif
+
+        if l:should_cd_to_current_file
+            silent! lcd -
+        endif
+    endif
+
+    " Ensure that intero is compiled
+    " TODO: Verify that we have a version of intero that the plugin can work with.
+    let l:version = system('stack ' . intero#util#stack_opts() . ' exec --verbosity silent -- intero --version')
+    if v:shell_error
+        let g:intero_built = 0
+        echom 'Intero not installed.'
+        let l:opts = { 'on_exit': function('s:build_complete') }
+        call s:start_compile(10, l:opts)
+    else
+        let g:intero_built = 1
+    endif
+endfunction
+
+function! s:build_terminal_invocation() abort
+    let l:terminal_options = {
+                \ 'on_stdout': function('s:on_stdout'),
+                \ }
+
+    if s:uses_custom_backend()
+        " Override to use a custom GHCi backend.
+        let l:terminal_command = g:intero_backend.command
+        " Add options if set.
+        if has_key(g:intero_backend, 'options')
+            let l:terminal_command .= ' ' . g:intero_backend.options
+        endif
+        " Use user-specified cwd if set.
+        if has_key(g:intero_backend, 'cwd')
+            let l:terminal_options.cwd = g:intero_backend.cwd
+        endif
+    else
+        " Use the default Intero invocation.
+        let l:terminal_ghci_options = []
+        if exists('g:intero_ghci_options')
+            let l:terminal_ghci_options = ['--ghci-options="' . g:intero_ghci_options .'"']
+        endif
+        let l:terminal_command = join([
+                    \ 'stack',
+                    \ intero#util#stack_opts(),
+                    \ 'ghci',
+                    \ '--with-ghc intero'] +
+                    \ l:terminal_ghci_options +
+                    \ [intero#util#stack_build_opts()]
+                    \ , ' ')
+        let l:terminal_options.cwd = fnamemodify(g:intero_stack_yaml, ':p:h')
+    endif
+
+    return { 'command': l:terminal_command, 'options': l:terminal_options }
 endfunction

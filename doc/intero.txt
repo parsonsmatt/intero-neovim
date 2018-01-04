@@ -256,7 +256,7 @@ different stack project than you were in initially, you may want to call
                   list.
 
                                                        *:InteroUseAllTargets*
-:InteroUseAllTargets 
+:InteroUseAllTargets
                   This loads all targets specified by `stack ide targets`.
 
                                                        *:InteroClearTargetCache*
@@ -322,6 +322,27 @@ g:intero_ghci_options
   Default: ''
 
   Options that configure the behaviour of GHCi. For example, -fobject-code.
+
+*g:intero_backend*
+
+  Overrides the default `intero` backend with a custom one. Specified as a
+  dict: >
+      let g:intero_backend = {
+              \ 'command': 'ghci',
+              \ 'options': '-Wall',
+              \ 'cwd': expand('%:p:h')
+              | }
+<
+  The following keys are supported:
+
+  * `'command'`: the command to start a GHCi REPL, e.g. `cabal repl` or
+    `ghci`.
+  * `'options'`:  a string of command-line arguments to the command (optional)
+  * `'cwd'`: specifies the current working directory of the GHCi
+    process (optional)
+
+  If `g:intero_backend` is set, `g:intero_ghci_options` and
+  `g:intero_load_targets` have no effect.
 
 =============================================================================
 CAVEATS                                                       *intero-caveats*

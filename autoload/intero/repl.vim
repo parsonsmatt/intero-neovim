@@ -48,12 +48,6 @@ function! intero#repl#load_current_file() abort
     endif
 endfunction
 
-function! s:supports_type_at() abort
-    let [l:major, l:minor, l:patch] = g:intero_ghci_version
-    " >= 8.0.1 supports :type-at
-    return l:major >= 8 && ((l:minor == 0 && l:patch >= 1) || l:minor > 0)
-endfunction
-
 " This function only gets the type of what's under the cursor.
 " For a visual selection, you MUST use the key mapping, not the command.
 function! intero#repl#type(generic) abort
@@ -63,25 +57,56 @@ function! intero#repl#type(generic) abort
     call intero#repl#type_at(a:generic, l:l, l:c, l:l, l:c)
 endfunction
 
+" Gets the type at the given location, specified by:
+"
+" * `l1`: start line
+" * `c1`: start column
+" * `l2`: end line
+" * `c2`: end column
+"
+" The `generic` argument specifies if this should return the
+" generic or specialized type.
 function! intero#repl#type_at(generic, l1, c1, l2, c2) abort
-    let l:module = intero#loc#detect_module()
+    let l:info = intero#loc#get_identifier_information()
 
-    if a:generic
-        if !(a:l1 == a:l2 && a:c1 == a:c2)
-            let l:identifier = intero#util#get_selection(a:l1, a:c1, a:l2, a:c2)
-        else
-            let l:identifier = intero#util#get_haskell_identifier()
-        endif
+    if !(a:l1 == a:l2 && a:c1 == a:c2)
+        let l:identifier = intero#util#get_selection(a:l1, a:c1, a:l2, a:c2)
+        let l:col1 = a:c1
+        let l:col2 = a:c2
     else
+        " Use the detected identifier information if we don't have a selection.
+        let l:identifier = l:info.identifier
+        let l:col1 = l:info.beg_col
+        let l:col2 = l:info.end_col
+    endif
+
+    if !a:generic
         let l:identifier = 'it'
     endif
 
-    " Fixup tabs for Stack
-    let l:col1 = intero#util#getcol(a:l1, a:c1)
-    let l:col2 = intero#util#getcol(a:l2, a:c2)
+    if s:ghci_supports_type_at_and_uses()
+        if g:intero_backend_info.backend ==# 'intero'
+            let l:module = intero#loc#detect_module()
 
-    call intero#repl#eval(
-        \ join([':type-at', l:module, a:l1, l:col1, a:l2, l:col2, l:identifier], ' '))
+            " Fixup tabs for Stack
+            let l:col1 = intero#util#getcol(a:l1, a:c1)
+            let l:col2 = intero#util#getcol(a:l2, a:c2)
+        else
+            " Relative path to current file, quoted.
+            let l:module = '"' . @% . '"'
+
+            " Weird difference where regular GHCi needs the end column to be
+            " beyond the last character of the selection, as opposed to how
+            " Intero wants it:
+            let l:col2 += 1
+        endif
+
+        call intero#repl#eval(
+            \ join([':type-at', l:module, a:l1, l:col1, a:l2, l:col2, l:identifier], ' '))
+    else
+        " Fallback to :type for older versions of GHCi.
+        call intero#repl#eval(join([':type', l:identifier], ' '))
+    endif
 endfunction
 
 " This function gets the type of what's under the cursor OR under a selection.
@@ -145,12 +170,14 @@ endfunction
 function! intero#repl#uses() abort
     if !g:intero_started
         echoerr 'Intero is still starting up'
-    else
+    elseif s:ghci_supports_type_at_and_uses()
         let l:info = intero#loc#get_identifier_information()
         call intero#repl#send(intero#util#make_command(':uses'))
         exec 'normal! /' . l:info.identifier . "\<CR>N"
         set hlsearch
         let @/ = l:info.identifier
+    else
+        echoerr 'Your GHCi version does not seem to support `:uses`'
     endif
 endfunction
 
@@ -226,3 +253,8 @@ function! s:paste_type(type_lines) abort
     end
 endfunction
 
+function! s:ghci_supports_type_at_and_uses() abort
+    let l:ghci_has_type_at = intero#process#backend_info#version_gte(
+                \ g:intero_backend_info.version, [8, 0, 1])
+    return g:intero_backend_info.backend ==# 'intero' || l:ghci_has_type_at
+endfunction
