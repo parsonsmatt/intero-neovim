@@ -7,6 +7,10 @@ if !exists('g:intero_use_neomake')
     let g:intero_use_neomake = 1
 endif
 
+if !exists('g:intero_type_on_hover')
+    let g:intero_type_on_hover = 0
+endif
+
 " Starts the Intero process in the background.
 command! -nargs=0 -bang InteroStart call intero#process#start()
 " Kills the Intero process.
@@ -45,6 +49,12 @@ command! -nargs=* -bang InteroSetTargets call intero#process#restart_with_target
 command! -nargs=0 -bang InteroUseAllTargets call intero#targets#enable_all_targets()
 " Clear the cached targets (useful if you've moved into a new stack project)
 command! -nargs=0 -bang InteroClearTargetCache call intero#targets#clear_target_cache()
+" Toggle type information on hover.
+command! -nargs=0 -bang InteroToggleTypeOnHover call intero#repl#toggle_type_on_hover()
+" Enable type information on hover.
+command! -nargs=0 -bang InteroEnableTypeOnHover call intero#repl#enable_type_on_hover()
+" Disable type information on hover.
+command! -nargs=0 -bang InteroDisableTypeOnHover call intero#repl#disable_type_on_hover()
 
 " Same as the :InteroType commands, but as maps (so they work with selections)
 noremap <expr> <Plug>InteroType intero#repl#pos_for_type(0)
@@ -79,5 +89,14 @@ if g:intero_use_neomake
             \ 'errorformat': s:efm
         \ }
 endif
+
+if g:intero_type_on_hover
+    InteroEnableTypeOnHover
+endif
+" Get type information when you hold the cursor still for some time.
+augroup interoTypeOnHover
+    au!
+    au CursorHold *.hs call intero#repl#type_on_hover()
+augroup END
 
 " vim: set ts=4 sw=4 et fdm=marker:

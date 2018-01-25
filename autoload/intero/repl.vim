@@ -8,6 +8,10 @@
 " inserted in a callback, hence this state variable.
 let s:insert_type_identifier = 0
 
+" Keep track of the current word under the cursor. It's used to avoid rerunning
+" type info on hover when it's the same identifier.
+let s:word_under_cursor = ''
+
 function! intero#repl#eval(...) abort
     if !g:intero_started
         echoerr 'Intero is still starting up'
@@ -224,6 +228,45 @@ function! g:intero#repl#get_type_signature_line_replacement(existing_line, type_
     return
                 \ [l:prefix . l:first]
                 \ + l:indented + [l:indent . l:suffix]
+endfunction
+
+function! intero#repl#toggle_type_on_hover() abort
+    if g:intero_type_on_hover
+        call intero#repl#disable_type_on_hover()
+    else
+        call intero#repl#enable_type_on_hover()
+    endif
+endfunction
+
+function! intero#repl#enable_type_on_hover() abort
+    let g:intero_type_on_hover = 1
+endfunction
+
+function! intero#repl#disable_type_on_hover() abort
+    let g:intero_type_on_hover = 0
+endfunction
+
+function! intero#repl#type_on_hover() abort
+    if g:intero_type_on_hover && g:intero_started
+        let l:new_word_under_cursor = expand('<cword>')
+        if s:word_under_cursor !=# l:new_word_under_cursor
+            let l:ident = intero#util#get_haskell_identifier()
+            if !empty(l:ident)
+                call intero#process#add_handler(function('intero#repl#type_on_hover_handler'))
+                call intero#repl#send(':type ' . l:ident)
+            endif
+            let s:word_under_cursor = l:new_word_under_cursor
+        endif
+    endif
+endfunction
+
+function! intero#repl#type_on_hover_handler(lines) abort
+    if len(a:lines) > 0
+        let l:message = a:lines[0]
+        " NOTE: Whenever this is merged https://github.com/neovim/neovim/pull/6619, we could
+        " use that to display the type information instead of echo.
+        echo l:message
+    endif
 endfunction
 
 """"""""""
