@@ -31,7 +31,7 @@ function! intero#loc#get_identifier_information() abort
 endfunction
 
 function! intero#loc#detect_module() abort "{{{
-    let l:regex = '^\C>\=\s*module\s\+\zs[A-Za-z0-9.]\+'
+    let l:regex = '^\C>\=\s*module\s\+\zs[A-Za-z0-9._]\+'
     for l:lineno in range(1, line('$'))
         let l:line = getline(l:lineno)
         let l:pos = match(l:line, l:regex)
