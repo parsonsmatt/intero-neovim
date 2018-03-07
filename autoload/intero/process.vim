@@ -12,9 +12,6 @@ let s:current_response = []
 " The current (incomplete) line
 let s:current_line = ''
 
-" Whether Intero has finished starting yet
-let g:intero_started = 0
-
 " Whether Intero has done its initialization yet
 let s:intero_initialized = 0
 

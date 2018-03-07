@@ -11,6 +11,10 @@ if !exists('g:intero_type_on_hover')
     let g:intero_type_on_hover = 0
 endif
 
+if !exists('g:intero_started')
+    let g:intero_started = 0
+endif
+
 " Starts the Intero process in the background.
 command! -nargs=0 -bang InteroStart call intero#process#start()
 " Kills the Intero process.
