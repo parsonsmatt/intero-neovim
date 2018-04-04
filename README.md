@@ -170,8 +170,8 @@ and specifies a `cwd` for a sub-directory project:
 let g:intero_backend = {
         \ 'command': 'cabal new-repl',
         \ 'options': '-Wall',
-        \ 'cwd': expand('%:p:h')
-        | }
+        \ 'cwd': expand('%:p:h'),
+        \}
 ```
 
 Such configuration can be set per-project using a [local .nvimrc
