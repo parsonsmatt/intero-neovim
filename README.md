@@ -156,6 +156,13 @@ let g:intero_start_immediately = 0
 
 " Enable type information on hover (when holding cursor at point for ~1 second).
 let g:intero_type_on_hover = 1
+
+" Change the intero window size; default is 10.
+let g:intero_window_size = 15
+
+" Sets the intero window to split vertically; default is horizontal
+let g:intero_vertical_split = 1
+
 " OPTIONAL: Make the update time shorter, so the type info will trigger faster.
 set updatetime=1000
 ```

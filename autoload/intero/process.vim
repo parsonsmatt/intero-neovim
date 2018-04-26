@@ -97,9 +97,13 @@ function! intero#process#hide() abort
 endfunction
 
 function! intero#process#open() abort
-    " Opens the Intero REPL. If the REPL isn't currently running, then this
+    " Opens the Intero REPL with a default size of 10. If the REPL isn't currently running, then this
     " creates it. If the REPL is already running, this is a noop. Returns the
     " window ID.
+    if !exists('g:intero_window_size')
+        let g:intero_window_size = 10
+    endif
+
     call intero#process#initialize()
 
     let l:intero_win = intero#util#get_intero_window()
@@ -107,7 +111,7 @@ function! intero#process#open() abort
         return l:intero_win
     elseif exists('g:intero_buffer_id')
         let l:current_window = winnr()
-        silent! call s:open_window(10)
+        silent! call s:open_window(g:intero_window_size)
         exe 'silent! buffer ' . g:intero_buffer_id
         normal! G
         exe 'silent! ' . l:current_window . 'wincmd w'
@@ -272,9 +276,18 @@ function! s:new_response(cmd, response) abort
 endfunction
 
 function! s:open_window(height) abort
-    " Opens a window of a:height and moves it to the very bottom.
-    exe 'below ' . a:height . ' split'
-    normal! <C-w>J
+    " Opens a window of a:height and moves it to the very bottom as a default.
+    if !exists('g:intero_vertical_split')
+        let g:intero_vertical_split = 0
+    endif 
+
+    if g:intero_vertical_split == 1
+      exe 'below ' . a:height . ' vsplit'
+      normal! <C-w>J
+    else
+      exe 'below ' . a:height . ' split'
+      normal! <C-w>J
+    endif
 endfunction
 
 function! s:hide_buffer() abort
