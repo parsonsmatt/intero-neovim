@@ -15,6 +15,10 @@ if !exists('g:intero_started')
     let g:intero_started = 0
 endif
 
+if !exists('g:intero_prompt_regex')
+    let g:intero_prompt_regex = '[^-]> '
+endif
+
 " Starts the Intero process in the background.
 command! -nargs=0 -bang InteroStart call intero#process#start()
 " Kills the Intero process.

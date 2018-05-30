@@ -188,6 +188,7 @@ function! s:start_buffer(height) abort
     set bufhidden=hide
     set noswapfile
     set hidden
+    set filetype=intero
     let l:buffer_id = bufnr('%')
     let g:intero_job_id = b:terminal_job_id
     quit
@@ -196,10 +197,6 @@ function! s:start_buffer(height) abort
 endfunction
 
 function! s:on_stdout(jobid, lines, event) abort
-    if !exists('g:intero_prompt_regex')
-        let g:intero_prompt_regex = '[^-]> '
-    endif
-
     for l:line_seg in a:lines
         let s:current_line = s:current_line . l:line_seg
 
