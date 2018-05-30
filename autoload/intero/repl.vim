@@ -38,8 +38,11 @@ function! intero#repl#load_current_module() abort
     if !g:intero_started
         echoerr 'Intero is still starting up'
     else
+        " Truncate file, so that we don't show stale results while recompiling
+        call intero#maker#write_update([])
+
         " Loads the current module, inferred from the given filename.
-        call intero#repl#send(':l ' . intero#loc#detect_module())
+        call intero#repl#send(':load ' . intero#loc#detect_module())
     endif
 endfunction
 
@@ -47,8 +50,11 @@ function! intero#repl#load_current_file() abort
     if !g:intero_started
         echoerr 'Intero is still starting up'
     else
+        " Truncate file, so that we don't show stale results while recompiling
+        call intero#maker#write_update([])
+
         " Load the current file (useful for using the stack global project)
-        call intero#repl#send(':l ' . expand('%:p'))
+        call intero#repl#send(':load ' . expand('%:p'))
     endif
 endfunction
 
@@ -301,3 +307,5 @@ function! s:ghci_supports_type_at_and_uses() abort
                 \ g:intero_backend_info.version, [8, 0, 1])
     return g:intero_backend_info.backend ==# 'intero' || l:ghci_has_type_at
 endfunction
+
+" vim: set ts=4 sw=4 et fdm=marker:

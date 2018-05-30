@@ -263,7 +263,7 @@ function! s:new_response(cmd, response) abort
         let g:intero_echo_next = 0
     endif
 
-    if a:cmd =~# ':reload'
+    if a:cmd =~# ':reload' || a:cmd =~# ':load'
         " Trigger Neomake's parsing of the compilation errors
         call intero#maker#write_update(a:response)
     endif
