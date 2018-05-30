@@ -173,8 +173,17 @@ function! intero#repl#reload() abort
         " Truncate file, so that we don't show stale results while recompiling
         call intero#maker#write_update([])
 
+        call intero#repl#clear()
         call intero#repl#send(':reload')
     endif
+endfunction
+
+function! intero#repl#clear() abort
+    if !exists('g:intero_buffer_id')
+        echomsg 'Intero not running.'
+        return
+    endif
+    call jobsend(g:intero_job_id, "\<C-u>")
 endfunction
 
 function! intero#repl#uses() abort
