@@ -70,10 +70,14 @@ function! s:handle_loc(resp) abort
         let l:start_row = l:start_split[0]
         let l:start_col = l:start_split[1]
         let l:cwd = getcwd()
+        " jump to the appropriate location, taking care to add exactly one
+        " entry to the jumplist
         if l:pack_or_path != l:cwd . '/' . expand('%')
-            exec 'edit +' . l:start_row . ' ' . l:pack_or_path
+            exec 'edit ' . l:pack_or_path
+            call cursor(l:start_row, l:start_col)
+        else
+            exec 'normal ' . l:start_row . 'G' . l:start_col . '|'
         endif
-        call cursor(l:start_row, l:start_col)
         exec 'cd ' . l:cwd
     endif
 endfunction
