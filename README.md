@@ -1,3 +1,10 @@
+# Sunset Notice
+
+The [`intero`](https://github.com/chrisdone/intero#intero-) project has reached sunset status and will no longer be supported.
+As such, this plugin will also be in sunset mode.
+
+The GHCi mode is still useful from this plugin. I would suggest someone forking this repository, removing `intero` specific code, and releasing it as a new plugin.
+
 # [Intero][] for Neovim
 
 [![Build Status](https://travis-ci.org/parsonsmatt/intero-neovim.svg?branch=master)](https://travis-ci.org/parsonsmatt/intero-neovim)
